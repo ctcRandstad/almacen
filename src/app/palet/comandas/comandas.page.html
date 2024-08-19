@@ -1,0 +1,115 @@
+<ion-header>
+    <ion-toolbar>
+        <ion-buttons slot="start">
+            <!-- boton del menu que se encuentra en app-component -->
+            <ion-menu-button autoHide="false"></ion-menu-button>
+            <ion-back-button defaultHref="/mani1" (click)="atras()"></ion-back-button>
+
+        </ion-buttons>
+        <ion-title class="text-center text-primary">Solicitudes pendientes</ion-title>
+    </ion-toolbar>
+</ion-header>
+
+<ion-content *ngIf="!movil">
+
+    <table *ngIf="!select && !instruT" class="table table-striped top">
+        <thead class="table-active text-white">
+            <tr>
+                <td class="text-center">Fecha</td>
+                <td class="text-center">Categoría</td>
+                <td>Medidas (cm)</td>
+                <td>Cantidad</td>
+                <td class="text-center">Instrucción</td>
+                <td class="text-center">Ubicación</td>
+                <td>Solicitante</td>
+            </tr>
+        </thead>
+        <tbody *ngIf="nadaData">
+            <tr>
+
+                <td colspan="7" class="alert alert-warning text-center">
+                    Todavía no posee ninguna solicitud.
+                </td>
+            </tr>
+        </tbody>
+        <tbody *ngIf="!nadaData">
+
+            <tr *ngFor="let item of data" (click)="myFunction(item)">
+                <td>{{ item.dataC | date: 'medium'}}</td>
+                <td *ngIf="item.nombreCategoria">{{ item.nombreCategoria}}</td>
+                <td *ngIf="!item.nombreCategoria">-------------------</td>
+                <td *ngIf="item.nombreCategoria">{{ item.ancho}} x {{ item.largo}}</td>
+                <td class="text-center">{{ item.cantidad}}</td>
+                <td *ngIf="item.instruccion">{{ item.instruccion}}</td>
+                <td *ngIf="!item.instruccion">-------------</td>
+                <td>{{ item.nombreUbicacion}}</td>
+                <td>{{ item.solicitante}}</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <!--  Comienza la tabla de listado de materiales, para su retirada.. -->
+    <ion-item>
+        <ion-input></ion-input>
+    </ion-item>
+    <table class="table table-striped" *ngIf="!select">
+        <thead class="table-primary text-white">
+            <tr>
+                <td>Fecha</td>
+                <td>Material</td>
+                <td>Referencia</td>
+                <td class="text-center">Cantidad</td>
+                <td>Ubicación</td>
+                <td>Solicitante</td>
+                <td>Confirmar</td>
+
+            </tr>
+        </thead>
+        <tbody *ngIf="!nadaDatas">
+
+            <tr *ngFor="let item of datas" [ngClass]="{'bg-danger text-white': item.retiro == 1}">
+                <td>{{ item.dataC | date: 'medium'}}</td>
+                <td class="text-capitalize">{{ item.nombreMaterial}}</td>
+                <td class="text-capitalize">{{ item.desOpcional}}</td>
+                <td class="text-center">{{ item.cantidad}}</td>
+                <td>{{ item.nombre}}</td>
+                <td>{{ item.solicitante}}</td>
+                <td (click)="desestimarAhora(item.idComanda)">
+                    <ion-button expand="full" fill="outline" *ngIf="item.retiro == 0">Hecho</ion-button>
+                    <ion-button expand="full" fill="outline" color="secondary" *ngIf="item.retiro == 1">Hecho</ion-button>
+                </td>
+
+            </tr>
+        </tbody>
+
+    </table>
+
+
+    <div class="alert alert-danger h1" *ngIf="errorCantidad">
+        <strong>ERROR!</strong> La cantidad que quiere retirar es mayor al <strong> STOCK</strong> disponible. Por lo tanto se ha modificado la cantidad de retiro al stock disponible.
+    </div>
+
+    <ion-card *ngIf="select" class="h1">
+        <ion-item class="h1">
+            <ion-icon name="pin" slot="start"></ion-icon>
+            <ion-label *ngIf="!cero"><span class="text-primary">{{ nombreCategoria }} -- {{ ancho}} x {{ largo }}</span> </ion-label>
+            <ion-label *ngIf="cero">El stock de este palet es {{can}}. <br> Por lo tanto, no lo podrá retirar. </ion-label>
+            <ion-button *ngIf="!cero && !boton && !instruccion" fill="outline" size="large" slot="end" (click)="aceptar()">Aceptar</ion-button>
+            <ion-button *ngIf="!cero && !boton && instruccion" fill="outline" size="large" slot="end" (click)="aceptarI()">Aceptar I</ion-button>
+            <ion-button *ngIf="boton" fill="outline" size="large" slot="end">
+                <ion-spinner name="crescent"></ion-spinner> Espere puede tardar varios segundos...
+            </ion-button>
+        </ion-item>
+
+        <ion-card-content class="h2" *ngIf="!cero">
+            Cantidad: <span class="text-primary"> {{ cantidad }}</span>
+            <br> Ubicacion: <span class="text-primary"> {{ nombreUbicacion }}</span>
+            <br>
+            <ion-label *ngIf="!cero">Palet: <span class="text-primary">{{ nombreCategoria }} -- {{ ancho}} x {{ largo }}</span> </ion-label>
+        </ion-card-content>
+        &nbsp;&nbsp;
+        <!-- <ion-button *ngIf="!cero" size="large" color="dark" fill="outline" (click)="salir()">Salir</ion-button> -->
+        <ion-button color="danger" fill="outline" size="large" (click)="desestimarPalet(nombreCategoria, ancho , largo)">Desestimar</ion-button>
+
+    </ion-card>
+</ion-content>

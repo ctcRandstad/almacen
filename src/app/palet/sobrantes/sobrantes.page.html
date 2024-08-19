@@ -1,0 +1,65 @@
+<ion-header>
+    <ion-toolbar>
+        <ion-buttons slot="start">
+            <!-- boton del menu que se encuentra en app-component -->
+            <ion-menu-button autoHide="false"></ion-menu-button>
+            <ion-back-button defaultHref="/salida"></ion-back-button>
+
+        </ion-buttons>
+        <ion-title class="text-center text-primary">Consultas devoluciones</ion-title>
+    </ion-toolbar>
+</ion-header>
+
+
+<ion-content class="ion-padding">
+
+    <div class="row">
+        <div class="col-md-4"></div>
+        <div class="col-md-6">
+
+            <form #action="ngForm" *ngIf="!tabla" (ngSubmit)="verDev(action)">
+                <!-- <ion-item>
+                    <ion-label position="fixed">Fecha</ion-label>
+                    <ion-input type="date" name="fecha" ngModel></ion-input>
+                </ion-item> -->
+                <ion-item>
+                    <ion-label class="text-primary">Seleccione una fecha de consulta</ion-label>
+                    <ion-datetime locale="es-ES" [firstDayOfWeek]="1"  (ionChange)="cambioFecha($event)"></ion-datetime>
+                    <!-- <ion-datetime displayFormat="DD/MMM/YYYY" placeholder="Fecha seleccionada" name="fecha" ngModel cancelText="Cancelar" doneText="Aceptar" (ionChange)="cambioFecha($event)"></ion-datetime> -->
+                </ion-item>
+
+                <ion-button type="submit" color="primary">Consultar</ion-button>
+            </form>
+
+        </div>
+    </div>
+
+    <table class="table table-striped " *ngIf="tabla">
+        <thead class="tablaHead text-white">
+            <tr>
+                <td class="text-center">Categoría</td>
+                <td class="text-center">Medidas (cm)</td>
+                <td class="text-center">Instrucción</td>
+                <td class="text-center">Cantidad (uds)</td>
+                <td class="text-center">Fecha</td>
+            </tr>
+        </thead>
+        <tbody>
+
+            <tr *ngFor="let item of data">
+                <td *ngIf="item.nombreCategoria">{{ item.nombreCategoria}}</td>
+                <td class="text-center" *ngIf="item.nombreCategoria">{{ item.ancho}} x {{ item.largo}}</td>
+                <td *ngIf="item.instruccion">{{ item.instruccion}}</td>
+                <td class="text-center" *ngIf="!item.instruccion">-----------------</td>
+                <td class="text-center">{{ item.cantidadDevuelta}}</td>
+                <td class="text-center">{{ item.fechaDebuelta | date: 'medium'}}</td>
+                <td *ngIf="!item.nombreCategoria">-------------------</td>
+            </tr>
+
+        </tbody>
+        <button type="button" class="btn primary1 top" (click)="reset()">
+            <ion-icon name="search"></ion-icon>  Volver a buscar
+       </button>
+    </table>
+
+</ion-content>

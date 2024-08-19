@@ -35,3 +35,57 @@
 /* @import "@ionic/angular/css/palettes/dark.always.css"; */
 /* @import "@ionic/angular/css/palettes/dark.class.css"; */
 @import "@ionic/angular/css/palettes/dark.system.css";
+
+.bg-palido {
+    background: #f1a33c!important;
+    color: #ffffff;
+}
+
+.tablaHead {
+    background: #7A726B!important;
+}
+
+.dispos {
+    position: absolute;
+    margin-top: -94px;
+    margin-left: 45%;
+    padding: 7px;
+    border-radius: 5px;
+    border-left: 1px solid #FF8800;
+    border-right: 1px solid #FF8800;
+    border-top: 1px solid #FF8800;
+    background: #FF8800;
+    color: #ffffff;
+}
+
+.estanteria {
+    background: #FF8800;
+    color: #ffffff;
+    padding: 7px;
+    border-radius: 5px;
+}
+
+.gris {
+    background: #e0e0e0;
+}
+
+.ref {
+    background: rgba(121, 85, 72, 0.7);
+    font-size: 150px!important;
+    color: #ffff;
+}
+
+.refer {
+    background: rgba(121, 85, 72, 0.7);
+    color: #ffff;
+}
+
+.alerta1 {
+    background: hsla(357, 80%, 52%, 0.743);
+    font-size: 150px!important;
+    color: hsl(0, 73%, 61%);
+}
+
+.alert-wrapper {
+    width: 500px!important;
+}

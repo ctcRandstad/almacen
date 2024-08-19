@@ -1,5 +1,7 @@
 {
   "name": "almacen2024",
-  "integrations": {},
+  "integrations": {
+    "capacitor": {}
+  },
   "type": "angular"
 }

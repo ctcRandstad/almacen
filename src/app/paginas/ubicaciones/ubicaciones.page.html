@@ -1,0 +1,38 @@
+<ion-header>
+    <ion-toolbar>
+        <ion-buttons slot="start">
+            <!-- boton del menu que se encuentra en app-component -->
+            <ion-menu-button autoHide="false"></ion-menu-button>
+            <ion-back-button defaultHref="/"></ion-back-button>
+
+        </ion-buttons>
+        <ion-title class="text-center text-primary">Comprobación huecos disponibles</ion-title>
+    </ion-toolbar>
+</ion-header>
+
+<ion-content>
+    <ion-grid>
+        <ion-row>
+            <ion-col size="3">
+            </ion-col>
+            <ion-col size="3" *ngIf="mostra">
+            </ion-col>
+            <ion-col size="6" class="ion-padding">
+                <ion-spinner name="crescent" *ngIf="mostra"></ion-spinner>
+                <ion-card class="ion-padding" *ngIf="!mostra">
+                    <ion-item *ngFor="let item of data">
+                        <ion-list-header (click)="ir(item)" class="h3">
+                            <ion-label color="warning">{{item.nombreMaterial}}</ion-label>
+                            <ion-label color="primary">{{item.nombre}}</ion-label>
+                        </ion-list-header>
+                    </ion-item>
+                </ion-card>
+            </ion-col>
+            <ion-col size="3">
+            </ion-col>
+        </ion-row>
+    </ion-grid>
+
+
+
+</ion-content>

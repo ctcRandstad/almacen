@@ -1,0 +1,39 @@
+<ion-header>
+    <ion-toolbar>
+        <ion-buttons slot="start">
+            <!-- boton del menu que se encuentra en app-component -->
+            <ion-menu-button autoHide="false"></ion-menu-button>
+            <ion-back-button defaultHref="/"></ion-back-button>
+
+        </ion-buttons>
+        <ion-title class="text-center text-primary">Consultas retiradas</ion-title>
+    </ion-toolbar>
+</ion-header>
+<ion-content class="ion-padding">
+
+    <table class="table table-striped">
+        <thead class=" tablaHead text-white">
+            <tr>
+                <td class="text-center">Categoría</td>
+                <td class="text-center">Medidas (cm)</td>
+                <td class="text-center">Instrucción</td>
+                <td class="text-center">Cantidad (uds)</td>
+                <td class="text-center">Fecha</td>
+                <td class="text-center">Ubicación</td>
+
+            </tr>
+        </thead>
+        <tr *ngFor="let item of data">
+            <td *ngIf="item.nombreCategoria">{{ item.nombreCategoria}}</td>
+            <td class="text-center" *ngIf="item.nombreCategoria">{{ item.ancho}} x {{ item.largo}}</td>
+            <td *ngIf="item.instruccion">{{ item.instruccion}}</td>
+            <td class="text-center" *ngIf="!item.instruccion">-----------------</td>
+            <td class="text-center">{{ item.cantidadSalida}}</td>
+            <td class="text-center">{{ item.fechaSalida | date: 'medium'}}</td>
+            <td class="text-center"> {{ item.nombreUbicacion}}</td>
+            <td *ngIf="!item.nombreCategoria">-------------------</td>
+        </tr>
+    </table>
+
+
+</ion-content>

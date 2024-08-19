@@ -1,0 +1,111 @@
+<ion-header>
+    <ion-toolbar>
+        <ion-buttons slot="start">
+            <!-- boton del menu que se encuentra en app-component -->
+            <ion-menu-button autoHide="false"></ion-menu-button>
+            <ion-back-button defaultHref="palets"></ion-back-button>
+
+        </ion-buttons>
+        <ion-title class="text-center text-primary">Devolver palets</ion-title>
+    </ion-toolbar>
+</ion-header>
+
+
+<ion-content *ngIf="!movil && !inicio" class=" container">
+
+    <div class="row top11 container">
+        <div class="col-md-4">
+            
+            <button type="button" class="btn primary1" (click)="reset()">
+                <ion-icon name="search"></ion-icon>  Volver a buscar
+           </button>
+        </div>
+
+    </div>
+    <br>
+
+    <section>
+
+        <div class="row">
+            <div class="col-md-5"></div>
+            <div class="col-md-4">
+                <!-- Buscamos el palet -->
+                <form *ngIf="!categoriaP && !nosepuede" #buscar="ngForm" (ngSubmit)="buscarPalet(buscar)">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="md-form form-sm">
+                                <input mdbInput type="number" autocomplete="off" name="ancho" ngModel id="form1" class="form-control form-control-lg ">
+                                <label for="form1" class="text-primary text-center">Ancho (cm)</label>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="md-form form-sm">
+                                <input mdbInput type="number" autocomplete="off" name="largo" ngModel id="largo" class="form-control form-control-lg">
+                                <label for="largo" class="text-primary text-center">Largo (cm)</label>
+                            </div>
+                        </div>
+                        <button type="submit" class="btn btn-primary btn-block">Buscar</button>
+                    </div>
+                </form>
+                <div *ngIf="error1" class="col-md-12 top1">
+                    <div class="alert alert-danger top" role="alert">
+                        <a href="# " class="alert-link "> No existe ningún palet que corresponda a las medidas {{ancho }} x {{largo}}.</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+        <ion-card class="container card" *ngIf="categoriaP && !nosepuede">
+
+            <form #pedidoTemp="ngForm">
+
+                <input type="hidden" name="idPalet" [(ngModel)]="idPalet">
+                <input type="hidden" name="usuarioD" [(ngModel)]="usuarioD">
+                <div class="row h3" *ngIf="categoriaP">
+
+                    <div class="col-md-6" *ngIf="catPalet.length > 1">
+                        <ul class="list-group">
+                            <div *ngFor="let item of catPalet">
+                                <li class="list-group-item cursor" [ngClass]="{'active': item.idCategoria == idC}" (click)="seleccionarCat(item.idPalet, item.nombreCategoria,item.idCategoria)">
+                                    <span>{{item.nombreCategoria}} <span class="float-right"> <ion-icon name="share-alt"></ion-icon> </span></span>
+                                </li>
+                            </div>
+                        </ul>
+                    </div>
+
+                    <div class="col-md-6 text-center top11" *ngIf="catPalet.length == 1 && categoriaP">
+                        <span *ngFor="let item of catPalet">
+                  <div class="alert alert-secondary " role="alert">
+                      Categoría : <span class="text-uppercase"> {{item.nombreCategoria}} &nbsp;&nbsp; {{ancho }} x {{largo}} </span>
+                    </div>
+                    </span>
+                </div>
+
+                <div *ngIf="palet" class="col-md-3  ">
+                    <ion-label position="floating">Cantidad (uds)</ion-label>
+                    <input class="form-control" type="number" id="cantidad" autocomplete="off" #cantidad (keyup)="pilaPalet(cantidad)" required ngModel name="cantidad">
+                </div>
+                <div class=" col-md-1 top1" *ngIf="!errorCantidad && palet && !boton">
+                    <button (click)="addDevolucion(pedidoTemp)" [disabled]="pedidoTemp.invalid" class="btn btn-outline-danger btn-block">Aceptar</button>
+                    <span *ngIf="boton" class="text-success"> <ion-spinner name="lines-small"></ion-spinner> Espere</span>
+                </div>
+                <div class=" col-md-2 top1" *ngIf="!errorCantidad && palet && boton">
+                    <span *ngIf="boton" class="text-success"> <ion-spinner name="lines-small"></ion-spinner> Espere</span>
+                </div>
+                </div>
+            </form>
+            <!-- error de cantidad de stock insuficiente. -->
+            <div class="alert alert-danger text-center h4" *ngIf="errorCantidad">
+                <strong>ERROR!</strong> La cantidad que quiere devolver es mayor a <strong> 100 uds </strong>.
+            </div>
+        </ion-card>
+    </section>
+
+    <ion-refresher  slot="fixed" (ionRefresh)="doRefresh($event)">
+        <ion-refresher-content pullingIcon="chevron-down-circle-outline"
+        pullingText="Pull to refresh"
+        refreshingSpinner="circles"
+        refreshingText="Refrescando la página..."></ion-refresher-content>
+      </ion-refresher>
+</ion-content>

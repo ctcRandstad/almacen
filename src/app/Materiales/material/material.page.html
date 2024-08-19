@@ -1,0 +1,69 @@
+<ion-header>
+    <ion-toolbar>
+        <ion-buttons slot="start">
+            <!-- boton del menu que se encuentra en app-component -->
+            <ion-menu-button autoHide="false"></ion-menu-button>
+            <ion-back-button defaultHref="/"></ion-back-button>
+
+        </ion-buttons>
+        <ion-title class="text-center text-primary">Sección de {{data}}</ion-title>
+    </ion-toolbar>
+</ion-header>
+
+<!-- carretillero -->
+<!-- carretillero -->
+<!-- carretillero -->
+<!-- carretillero -->
+
+<ion-content class="ion-padding">
+    <ion-grid>
+        <ion-row>
+            <ion-col size="2" size-lg [routerLink]="[ '/entrada', idMaterial ]">
+                <ion-card class="alert alert-success">
+                    <ion-card-header>
+                        <h1 class="text-center text-uppercase "> entrada</h1>
+                    </ion-card-header>
+                    <ion-card-content class="h3 text-center">
+                        Esta opción es para la confirmación del albarán.
+                    </ion-card-content>
+                </ion-card>
+
+            </ion-col>
+            <ion-col size="2" size-lg [routerLink]="[ '/ubicarM', idMaterial ]">
+                <ion-card class="alert alert-warning">
+                    <ion-card-header>
+                        <h1 class="text-center text-uppercase "> ubicar</h1>
+                    </ion-card-header>
+                    <ion-card-content class="h3 text-center">
+                        En esta opción podrá ubicar los bultos en las ubicaciones.
+                    </ion-card-content>
+                </ion-card>
+
+            </ion-col>
+            <ion-col size="2" size-lg [routerLink]="[ '/movimientosM', idMaterial ]">
+
+                <ion-card class="alert alert-dark">
+                    <ion-card-header>
+                        <h1 class="text-center text-uppercase "> movimientos</h1>
+                    </ion-card-header>
+                    <ion-card-content class="h3 text-center">
+                        Esta opción es para mover material entre ubicaciones.
+                    </ion-card-content>
+                </ion-card>
+            </ion-col>
+            <ion-col size="2" size-lg [routerLink]="[ '/stockM', idMaterial ]">
+
+                <ion-card class="alert alert-danger">
+                    <ion-card-header>
+                        <h1 class="text-center text-uppercase "> stock</h1>
+                    </ion-card-header>
+                    <ion-card-content class="h3 text-center">
+                        Esta opción es para ver el stock de materiales en ubicaciones.
+                    </ion-card-content>
+                </ion-card>
+            </ion-col>
+        </ion-row>
+
+    </ion-grid>
+
+</ion-content>

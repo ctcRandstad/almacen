@@ -1,0 +1,153 @@
+<ion-header>
+    <ion-toolbar>
+        <ion-buttons slot="start">
+            <!-- boton del menu que se encuentra en app-component -->
+            <ion-menu-button autoHide="false"></ion-menu-button>
+            <ion-back-button defaultHref="/material/{{idMaterial}}"></ion-back-button>
+
+        </ion-buttons>
+        <ion-title class="text-center text-primary text-uppercase">{{datas}}: Pedidos a descargar</ion-title>
+    </ion-toolbar>
+</ion-header>
+
+
+<ion-content>
+   
+ 
+        <table class="table table-stripper top" *ngIf="!ve" >
+            <thead class="table-active text-white">
+                <tr class="tablaHead text-white">
+                <td class="text-center">Nro Pedido</td>
+                <td class="text-center">Proveedor</td>
+                <td class="text-center">Fecha Pedido</td>
+                <td class="text-center">Fecha entrega</td>
+                <td class="text-center">N° solicitud SAP</td>
+                <td class="text-center">Pedido</td>
+            </tr>
+        </thead>
+        <tbody *ngIf="!noPedido">
+            <tr *ngFor="let item of data" class="let">
+                <td class="text-center">{{ item.idPedido }}</td>
+                <td class="text-center">{{ item.razonSocial }}</td>
+                <td class="text-center">{{ item.fechaPedido | date: 'fullDate'}}</td>
+                <td class="text-center" *ngIf="item.fechaEntrega">{{ item.fechaEntrega | date: 'fullDate'}}</td>
+                <td *ngIf="!item.fechaEntrega" class="text-danger text-center">Sin confirmar</td>
+                <td class="text-center" *ngIf="item.solicitud">{{ item.solicitud | number}}</td>
+                <td class="text-center" *ngIf="!item.solicitud">-------------------</td>
+
+                <td>
+                    <a mdbBtn (click)="verPedido(item.idPedido , item.razonSocial)" class="btn btn-outline-primary btn-block">
+                        <ion-icon color="primary" name="print"></ion-icon>
+                    </a>
+                </td>
+            </tr>
+        </tbody>
+        <tbody *ngIf="noPedido">
+            <tr>
+
+                <td colspan="6" class="alert alert-warning text-center">No hay pedidos para descargar!</td>
+
+            </tr>
+        </tbody>
+    </table>
+
+    <div *ngIf="ve " class="modal-content ">
+        <!--Header-->
+        <div class="modal-body " id="impresion">
+            <div class="modal-headers ">
+                <div class="row">
+                    <div class="col-md-12">
+                        <h3 class="modal-title" id="myModalLabel ">
+                            <ion-icon name="logo-pinterest"></ion-icon> Pedido: {{ idPedido }} - {{razonSocial}}</h3>
+                    </div>
+                    <div class="col-md-6 ">
+                        <span class="chip"><span class="text-primary">Fecha Pedido :</span> {{fech | date : 'fullDate'}}</span>
+                    </div>
+                    <div class="col-md-6 ">
+                        <span class="chip "> <span class="text-primary">Fecha Entrega :</span> {{paraF | date : 'fullDate'}}</span>
+                    </div>
+                </div>
+            </div>
+            <div class="row ">
+                <div class="col-md-5 "></div>
+                <div class="col-md-6 ">
+                    <img src="assets/img/logo.png " alt="logoCTC" width="200">
+
+                </div>
+            </div>
+            <div class="table-responsive ">
+
+                <table class="table table-stripper ">
+                    <thead class="tablaHead text-white">
+                        <tr>
+                            <th class="text-center">Descripción</th>
+                            <th class="text-center">Código SAP</th>
+                            <th class="text-center">Cant. Solicitada</th>
+
+                            <th class="text-center">Cant. Entregada</th>
+                            <th class="text-center"> Modificar </th>
+                            <th class="text-center">Cant. Bultos</th>
+                            <th class="text-center">Validar </th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr *ngFor="let item of pRealizado">
+                            <td class="text-center"> <span class="text-uppercase ">{{item.descripcion}}</span></td>
+                            <td class="text-center">{{item.codigoSap}}</td>
+                            <td class="text-center">{{item.cantidad}}</td>
+                            <td class="text-center">{{item.cantidadM}}</td>
+
+                            <td class="text-center" *ngIf="item.validado == 0">
+                                <span (click)="modificarC(item.descripcion, item.cantidad, item.cantidadM,idPedido , item.codigoSap, item.idDetalle)" class="btn btn-outline-primary">
+                                    <ion-icon name="create"></ion-icon>
+                                </span>
+                            </td>
+                            <td class="text-center" width="180">
+                                <ion-input [disabled]="item.validado==1" (change)="cantPaletCajas(item.idDetalle ,paletM)" #paletM type="number" class="form-control" name="palet" [(ngModel)]="item.paletM" value="custom"></ion-input>
+                            </td>
+                            <td class="text-center" *ngIf="item.validado == 1">
+
+                            </td>
+                            <td class="text-center" *ngIf="item.validado == 1">
+                                <span class="text-success"><ion-icon name="checkbox-outline"></ion-icon> Validado</span>
+                            </td>
+                            <td *ngIf="item.validado == 0 && !btnTabs" class="text-center">
+                                <span (click)="validadL(item.descripcion, item.cantidad  , item.cantidadM,idPedido , item.codigoSap, item.idDetalle,item.paletM ,item.idProveedor , item.stockF)" class="btn btn-outline-success">
+                                    <ion-icon name="checkbox-outline"></ion-icon>
+                                </span>
+                            </td>
+
+                        </tr>
+                    </tbody>
+
+                </table>
+            </div>
+
+
+            <div class="row text-center">
+                <div class="col-md-3 ">
+                    <h4>
+                        <p [ngClass]="{ 'alert alert-danger': total }"> Total de Material: <span class="badge badge-default"> {{total}}</span>
+                        </p>
+                    </h4>
+
+                </div>
+            </div>
+        </div>
+        <!--Footer-->
+        <div class="modal-footer">
+            <button type="button" class="btn btn-outline-success" data-dismiss="modal" (click)="hide()">Salir</button>
+            <td class="text-uppercase text-center" colspan="4" (click)="aceptar(idPedido)">
+                <ion-button color="dark" expand="block">Confirmar</ion-button>
+            </td>
+        </div>
+    </div>
+
+        <ion-refresher  slot="fixed" (ionRefresh)="doRefresh($event)">
+          <ion-refresher-content pullingIcon="chevron-down-circle-outline"
+          pullingText="Pull to refresh"
+          refreshingSpinner="circles"
+          refreshingText="Refrescando la página..."></ion-refresher-content>
+        </ion-refresher>
+  
+</ion-content>

@@ -1,0 +1,279 @@
+<ion-header>
+    <ion-toolbar>
+        <ion-buttons slot="start">
+            <!-- boton del menu que se encuentra en app-component -->
+            <ion-menu-button autoHide="false"></ion-menu-button>
+            <ion-back-button defaultHref="/entrada/tabs/tab1" (click)="volver1()"></ion-back-button>
+
+        </ion-buttons>
+        <ion-title class="text-center text-primary">Palet: Pedidos a descargar</ion-title>
+    </ion-toolbar>
+</ion-header>
+<ion-content *ngIf="!movil">
+
+    <ion-list class="card ">
+        <div class="row">
+            <div class="col-md-">
+                <ion-list-header class="h4">
+                    <ion-label>
+                        <ion-icon name="list-box"> </ion-icon> Listado de pedidos</ion-label>
+                </ion-list-header>
+            </div>
+            <div class="col-md-3">
+                <div class="row" *ngIf="alba">
+                    <div class="col-md-12">
+                        <button (click)="volver()" type="button" class="btn btn-outline-warning">  <ion-icon name="backspace"></ion-icon> Volver al listado</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- buscador -->
+        <!-- <div class="row" *ngIf="!alba">
+            <div class="col-md-6">
+                <ion-searchbar no-border animated (ionChange)="buscar($event)" type="number" showCancelButton cancelButtonText="Custom Cancel"></ion-searchbar>
+            </div>
+        </div> -->
+
+        <table animated *ngIf="!ve  && !alba && sinData" class="table  table-hover">
+            <thead class=" tablaHead text-white">
+                <tr>
+                    <td class="text-center">Nro Pedido</td>
+                    <td class="text-center">Nro Albarán</td>
+                    <td class="text-center">Fecha Pedido</td>
+                    <!-- <td>FechaPara</td> -->
+                    <td class="text-center">Fecha confirmado</td>
+                    <td>Tipo Pedido</td>
+                    <td>Estado pedido</td>
+                    <td>Albaran</td>
+                </tr>
+            </thead>
+            <tbody>
+                <tr *ngFor="let item of data | filtro: filterQuery">
+
+                    <td class="text-center">{{ item.idPedido }}</td>
+                    <td class="text-center">{{ item.idAlbaran}}</td>
+                    <td class="text-center">{{ item.fecha | date: 'fullDate'}}</td>
+                    <!-- <td *ngIf="item.fechaConfirmado ">{{ item.paraFecha | date: 'fullDate'}}</td> -->
+                    <td class="text-center" *ngIf="item.fechaConfirmado ">{{ item.fechaConfirmado | date: 'fullDate'}}</td>
+                    <td class="text-danger " *ngIf="!item.fechaConfirmado ">Sin Data de confirmación</td>
+                    <td *ngIf=" item.extra==1 "><span class="alert alert-info text-center"> Extra</span></td>
+                    <td *ngIf=" item.normal==1 "><span class="alert alert-success text-center"> Normal</span></td>
+                    <td *ngIf=" item.urgente==1 "><span class="alert alert-danger text-center"> Urgente</span></td>
+
+                    <td *ngIf="item.cargado==1 "><span class="alert alert-warning ">Sin confirmar</span></td>
+                    <!-- <td *ngIf="item.cargado==1 && item.albaran==1 "><span class="alert alert-success ">En trasporte</span></td> -->
+                    <td *ngIf="item.cargado==0 && item.estadoPedido==0 "><span class="alert alert-primary " role="alert ">Enviado</span></td>
+                    <td *ngIf="item.cargado==0 && item.estadoPedido==1 "><span class="alert alert-warning " role="alert ">Pendiente validar</span></td>
+
+                    <td colspan=2 *ngIf="item.albaran==1 ">
+                        <a class="btn btn-outline-primary btn-block" (click)="verPedidoAlbaran(item.idPedido) ">
+                            <ion-icon color="primary" name="print"></ion-icon>
+                        </a>
+                    </td>
+
+                </tr>
+            </tbody>
+
+        </table>
+        <ion-grid *ngIf="!sinData">
+            <ion-row>
+                <ion-col size="12" size-lg>
+                    <div class="alert alert-danger" role="alert">
+                        <strong>Lo sentimos! </strong> No hay albaranes para confirmar.
+                    </div>
+                </ion-col>
+
+            </ion-row>
+        </ion-grid>
+
+        <!-- comienza el albarán -->
+        <!-- comienza el albarán -->
+        <!-- comienza el albarán -->
+        <!-- comienza el albarán -->
+        <!-- comienza el albarán -->
+        <div *ngIf="alba" class="impresion" id="impresion">
+
+            <div class="row">
+                <div class="col-md-6 ">
+                    <ion-card>
+                        <ion-card-header>
+                            <ion-card-title>
+                                <h4 class="h2">SERRERIAS GAROLERA, S.L</h4>
+                            </ion-card-title>
+                            <div class="row ">
+                                <div class="col-md-6">
+                                    <ion-card-content class="text-success">Ctra. Esclet s/n. Apartat 59</ion-card-content>
+
+                                </div>
+                                <div class="col-md-6">
+                                    <ion-card-content class="text-success">Fax: 972 46 31 58</ion-card-content>
+
+                                </div>
+                                <div class="col-md-6">
+                                    <ion-card-content class="text-success">Tel: 972 46 31 79</ion-card-content>
+
+                                </div>
+                                <div class="col-md-6">
+                                    <ion-card-content class="text-success">Tel: 972 46 02 40</ion-card-content>
+
+                                </div>
+                            </div>
+                            <div class="flex-row">
+                                <!-- <a class="card-link">Card link</a> -->
+                                <a class="card-link text-success">14244 Cassà de la Selva (Girona)</a>
+                            </div>
+                        </ion-card-header>
+                    </ion-card>
+                </div>
+                <div class="col-md-6">
+                    <ion-card>
+                        <ion-card-title>
+                            &nbsp; &nbsp;
+                            <h1 class="font-weight-bold mb-2 h1">ALBARÁN <span class="alert alert-danger">N.°{{ idAlbaran }}</span></h1>
+                        </ion-card-title>
+                        <ul class="list-group list-group-flush">
+                            <li class="list-group-item h6">
+                                <span class="text-primary font-weight-bold h5">PEDIDO Nro. </span><span class="alert alert-danger">N.° : {{ idPedido }}</span></li>
+                            <li class="list-group-item h6">
+                                <span class="text-primary font-weight-bold ">FECHA: </span>{{ fechas | date: 'fullDate'}}</li>
+                        </ul>
+                    </ion-card>
+                </div>
+                <div class="col-md-12 border h4">
+                    <ion-card>
+                        <ul class="list-group list-group-flush">
+                            <li class="list-group-item"><span class="text-info">Cliente:  </span> Srs. CTC EXTERNALIZACIÓN</li>
+                            <li class="list-group-item">
+                                <div class="row">
+                                    <div class="col-md-3"><span class="text-info">Domicilio</span><br> Carrer de la Papelera Torras, s/n
+                                    </div>
+                                    <div class="col-md-3"></div>
+                                    <div class="col-md-5"><span class="text-info">Población</span><br> 17857 – Sant Joan les Fonts (Girona)
+                                    </div>
+                                </div>
+                            </li>
+                        </ul>
+                    </ion-card>
+                </div>
+                <div class="col-md-12 h2">
+                    <ion-card class="border">
+                        <table class="table table-bordered  h3">
+                            <thead>
+                                <tr class="font-weight-bold">
+                                    <th width="230">CANTIDAD</th>
+                                    <th class="text-center">REFERENCIAS</th>
+                                    <th class="text-center">INSTRUCCIÓN</th>
+                                    <th>Validar &nbsp; &nbsp; Eliminar</th>
+                                    <th *ngIf="show">Comentario</th>
+                                </tr>
+                            </thead>
+                            <tbody class="font-weight-bold">
+                                <tr *ngFor="let item of albaran">
+                                    <th *ngIf="item.validado == 0 ">
+                                        <!-- cantidad -->
+                                        <span class="btn btn-outline-warning" *ngIf="!show" (click)="modCant(item.cantidadE , item.idDetalle, item.cantidadM, item.nombreCategoria, item.ancho, item.largo,item.idPalet, item.idPedido)">
+                                          {{item.cantidadE}}
+                                     </span>
+                                        <ion-grid>
+                                            <ion-row>
+                                                <ion-col>
+                                                    <!-- suma -->
+                                                    <span *ngIf="show && idDetalle == item.idDetalle" (click)="suma()">
+                                                     <span *ngIf="!mostrarSuma"  class="btn btn-success"> <ion-icon name="add"></ion-icon> </span>
+                                                    </span>
+                                                </ion-col>
+                                                <ion-col>
+                                                    <!-- cantidadNueva -->
+                                                    <span *ngIf="show && idDetalle == item.idDetalle"><input (change)="modCantidad(canmtidadNueva)"  type="number" class="form-control form-control-lg " name="canmtidadNueva" [(ngModel)]="canmtidadNueva"></span>
+                                                </ion-col>
+                                                <ion-col>
+                                                    <!-- restar -->
+                                                    <span *ngIf="show && idDetalle == item.idDetalle" (click)="resta()">
+                                                     <span *ngIf="!mostrarResta" class="btn btn-primary"> <ion-icon name="remove"></ion-icon> </span>
+                                                    </span>
+                                                </ion-col>
+                                            </ion-row>
+                                        </ion-grid>
+                                    </th>
+
+                                    <th *ngIf="item.validado == 1 &&  !show && item.eliminado != 1">
+                                        {{item.cantidadE}}
+                                    </th>
+                                    <th *ngIf="item.validado == 1 &&  !show && item.eliminado == 1">
+                                        {{item.cantidadM}}
+                                    </th>
+                                    <!-- <th  class="text-uppercase">{{item.nombreCategoria }} - {{item.ancho}} x {{item.largo}}</th> -->
+                                    <th *ngIf="!show " class="text-uppercase">{{item.nombreCategoria }} - {{item.ancho}} x {{item.largo}}</th>
+                                    <th *ngIf="!show && item.instruccion" class="text-uppercase">{{item.instruccion }}</th>
+                                    <th *ngIf="!show && !item.instruccion " class="text-uppercase">-------</th>
+                                    <th *ngIf="show && idDetalle == item.idDetalle && item.validado == 0" class="text-uppercase">{{item.nombreCategoria }} - {{item.ancho}} x {{item.largo}}</th>
+                                    <th *ngIf="idDetalle == item.idDetalle && show ">
+                                        <ion-select placeholder="Comentario" (ionChange)="coment1($event,item.idPalet,item.idPedido)">
+                                            <ion-select-option value="m" selected>Defecto</ion-select-option>
+                                            <ion-select-option value="f">Cant. incorrecta</ion-select-option>
+
+                                        </ion-select>
+                                    </th>
+                                    <th *ngIf="item.validado == 0 && !btnTabs">
+                                        <span (click)="validadL(item.idDetalle, item.instruccion ,item.nombreCategoria,item.ancho, item.largo,  item.cantidad, item.cantidadM, item.cantidadE , item.idPalet ,item.idPedido)" *ngIf="!show" class="btn btn-outline-success">
+                                        <ion-icon name="checkbox-outline"></ion-icon>
+                                      </span> &nbsp; &nbsp; &nbsp;
+                                        <span *ngIf="!show" (click)="eliminarL(item.idDetalle ,item.nombreCategoria,item.ancho, item.largo, item.cantidadM, item.idPalet ,item.idPedido)" class="btn btn-outline-danger">
+                                                                                      <ion-icon name="trash"></ion-icon>
+                                                                                  </span>
+                                    </th>
+
+                                    <th class="text-success" *ngIf="item.validado == 1 && !show && item.eliminado == 0 && !btnTabs">
+                                        <ion-icon name="checkmark-circle-outline"></ion-icon> Validado
+                                    </th>
+                                    <th class="text-danger" (click)="recuperar(item.idDetalle,item.idPalet ,item.idPedido,item.cantidadM)" *ngIf="item.eliminado == 1 && !show">
+                                        <ion-icon name="trash"></ion-icon> Eliminado
+                                        <br>
+                                    </th>
+                                    <th *ngIf="item.validado == 0 ">
+                                        <ion-button *ngIf="show && idDetalle == item.idDetalle" (click)="salirSinEditar(canmtidadNueva)">
+                                            <ion-icon name="save"></ion-icon> Guardar
+                                        </ion-button>
+
+                                    </th>
+                                    <th *ngIf="item.eliminado == 1 && !show">
+                                        <ion-select placeholder="Comentario" (ionChange)="coment($event, item.idPalet,item.idPedido)">
+                                            <ion-select-option value="m" selected>Defecto</ion-select-option>
+                                            <ion-select-option value="f">Cant. incorrecta</ion-select-option>
+
+                                        </ion-select>
+
+                                    </th>
+                                </tr>
+                            </tbody>
+                        </table>
+                        <table class="table table-bordered h3">
+                            <tr>
+                                <td colspan="5" class="text-primary text-uppercase text-center">
+                                    Total palets
+                                </td>
+                                <td colspan="2" class="text-primary text-uppercase text-center">agente</td>
+                                <td colspan="2" class="text-primary text-uppercase text-center">bultos</td>
+                                <td colspan="2" class="text-primary text-uppercase text-center">Confirmar Pedido</td>
+
+                            </tr>
+                            <tr>
+                                <th class="h4 text-center" colspan="5">{{total}} Unidades</th>
+                                <td *ngIf="!m " colspan="2"><input required name="agente" ngModel type="text" class="form-control"></td>
+                                <td class="text-primary text-center h4 text-uppercase" *ngIf="m" colspan="2">{{ agente1 }}</td>
+                                <td class="text-primary text-center h4 text-uppercase" colspan="2">{{ albaran.length}}</td>
+                                <td class="text-uppercase text-center" colspan="4" (click)="aceptar(idPedido)">
+                                    <ion-button color="dark" expand="block">Confirmar</ion-button>
+                                </td>
+                            </tr>
+
+                        </table>
+
+                    </ion-card>
+                </div>
+            </div>
+
+        </div>
+
+    </ion-list>
+</ion-content>

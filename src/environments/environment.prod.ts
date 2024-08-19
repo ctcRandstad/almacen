@@ -1,3 +1,4 @@
 export const environment = {
-  production: true
+   production: true,
+  url: 'https://lecta.grupoctc.com/ctcpackApi/controllers/'
 };

@@ -1,0 +1,216 @@
+<ion-header>
+    <ion-toolbar>
+        <ion-buttons slot="start">
+            <!-- boton del menu que se encuentra en app-component -->
+            <ion-menu-button autoHide="false"></ion-menu-button>
+            <ion-back-button defaultHref="palets"></ion-back-button>
+
+        </ion-buttons>
+        <ion-title class="text-center text-primary">Retirada de palet por instrucción</ion-title>
+    </ion-toolbar>
+</ion-header>
+
+
+<ion-content *ngIf="!movil && !inicio" class="h2 ion-padding">
+    <ion-refresher slot="fixed" (ionRefresh)="doRefresh($event)">
+        <ion-refresher-content></ion-refresher-content>
+    </ion-refresher>
+
+    <div class="row" *ngIf="!exito">
+        <div class="col-md-3">
+            <ion-button *ngIf="tabla" (click)="nConsulta()">
+                Nueva consulta
+            </ion-button>
+        </div>
+        <div class="col-md-6 to">
+            <div class="input-group">
+                <div class="input-group-prepend">
+
+                </div>
+                <!-- <input (keypress)="dataToggle2()" type="text" name="instruccion" [(ngModel)]="instruccion" autocomplete="off" class="form-control" placeholder="Elija una Instrucción" aria-label="Username" aria-describedby="basic-addon1" autocomplete="off"> -->
+                <ion-searchbar [disabled]="tabla" no-border animated (keypress)="dataToggle2()" name="instruccion" [(ngModel)]="instruccion" type="number" showCancelButton cancelButtonText="Custom Cancel"></ion-searchbar>
+            </div>
+
+            <div class="product" *ngIf="toggle2">
+                <div class="alert alert-primary">
+                    <div (click)="selectTropa(item)" class="data" *ngFor="let item of data | filtro: instruccion">
+                        <span class="text-danger"> {{ item.instruccion }} </span>
+                        <hr>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="alert alert-danger" *ngIf="nada ">
+            <strong>ERROR!</strong> La instrucción que quieres retirar aún no tiene entrada.
+        </div>
+        <div class="col-md-12" *ngIf="tabla && !nada">
+            <table class="table table-bordered ">
+                <thead class=" tablaHead text-white">
+                    <tr>
+                        <td>Categoria</td>
+                        <td>Medida (cm)</td>
+                        <td>Stock</td>
+                        <td>Instrucción</td>
+                    </tr>
+                </thead>
+                <tbody>
+                    <td>{{tipo}}</td>
+                    <td>{{ ancho}} x {{ largo }}</td>
+                    <td>{{ disponible }}</td>
+                    <td>{{ instruccion}}</td>
+                </tbody>
+            </table>
+
+            <form #pedidoTemp="ngForm" (ngSubmit)="addPedidosTemp(pedidoTemp)">
+                <div class="row">
+                    <div class="col-md-2"></div>
+                    <div *ngIf="palet1" class="col-md-4">
+                        <div class="">
+                            <ion-item>
+                                <ion-label>Cantidad</ion-label>
+                                <ion-input type="number" placeholder="Cantidad" (keydown)="pilaPalet(pedidoTemp)" required name="stockReal" ngModel></ion-input>
+                            </ion-item>
+                        </div>
+                    </div>
+                    <div *ngIf="palet1" class="col-md-4">
+                        <!-- Default unchecked -->
+                        <div>
+                            <!-- <input type="checkbox" class="custom-control-input" name="pila" ngModel> -->
+                            <ion-checkbox mode="ios" color="primary" name="pila" [(ngModel)]="pilas"></ion-checkbox>
+                            <span class="custom-control-description">&nbsp;&nbsp; Por pilas</span>
+
+                        </div>
+                    </div>
+                </div>
+
+                <br>
+                <div class="row">
+                    <div class="col-md-5 alert alert-info " *ngIf="sumaStock>= 1">
+                        <div *ngIf="sumaStock  == 1">
+                            Total : <strong>  {{ sumaStock }} </strong> Unidad
+
+                        </div>
+                        <div *ngIf="sumaStock  > 1">
+                            Total : <strong>  {{ sumaStock }} </strong> Unidades
+                            <strong *ngIf="porPila">  "Por pilas" </strong>
+                        </div>
+                    </div>
+                    <!-- error de cantidad de stock insuficiente. -->
+                    <div class="alert alert-danger" *ngIf="errorCantidad">
+                        <strong>ERROR!</strong> La cantidad que quiere retirar es mayor al <strong> STOCK</strong> disponible.
+                    </div>
+                    <div class="col-md-7" *ngIf="sumaStock>= 1 && !errorCantidad">
+                        Seleccionar una ubicación
+                        <select required name="idUbicacion" ngModel class="browser-default custom-select text-uppercase form-control-lg">
+                             <option class="text-uppercase" *ngFor="let item of datas" [value]="item.idUbicacion" > {{ item.nombreUbicacion }}</option>
+                        </select>
+                    </div>
+                </div>
+
+                <input type="hidden" required name="cantidad" [(ngModel)]="sumaStock">
+                <input type="hidden" name="usuario" [(ngModel)]="usuario">
+                <input type="hidden" name="cantidad" [(ngModel)]="sumaStock">
+                <input type="hidden" name="usuario" [(ngModel)]="usuario">
+                <input type="hidden" name="instruccion" [(ngModel)]="instruccion">
+                <input type="hidden" name="idPalet" required [(ngModel)]="idPalet">
+
+                <div class="col-md-12" *ngIf="pedidoTemp.valid && !error && !errorCantidad">
+                    <button type="submit" [disabled]="pedidoTemp.invalid" class="btn btn-outline-danger btn-block">Aceptar</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+</ion-content>
+
+<ion-content *ngIf="movil">
+    <ion-refresher slot="fixed" (ionRefresh)="doRefresh($event)">
+        <ion-refresher-content></ion-refresher-content>
+    </ion-refresher>
+
+    <ion-searchbar no-border animated (keypress)="dataToggle2()" name="instruccion" [(ngModel)]="instruccion" type="number" showCancelButton cancelButtonText="Custom Cancel"></ion-searchbar>
+    <ion-list *ngIf="toggle2">
+        <ion-item (click)="selectTropa(item)" *ngFor="let item of data | filtro: instruccion">
+            {{ item.instruccion }}
+        </ion-item>
+    </ion-list>
+
+    <br>
+    <ion-list *ngIf="tabla">
+        <form #pedidoTemp="ngForm" (ngSubmit)="addPedidosTemp(pedidoTemp)">
+            <ion-item *ngFor="let item of palet">
+                <ion-label>Tipo palet</ion-label>
+                <ion-note class="h5 text-info" color="primary" slot="end">{{item.nombreCategoria}}</ion-note>
+            </ion-item>
+            <ion-item *ngFor="let item of palet">
+                <ion-label>Medida</ion-label>
+                <ion-note class="h5 text-info" slot="end" color="primary">{{ item.ancho}} x {{ item.largo }}</ion-note>
+            </ion-item>
+            <ion-item *ngFor="let item of palet">
+                <ion-label>Stock</ion-label>
+                <ion-note class="h5 text-info" slot="end" color="primary">{{ item.stockReal}}</ion-note>
+            </ion-item>
+            <ion-grid *ngIf="tabla">
+                <div>
+                    <ion-item>
+                        <ion-label>Cantidad</ion-label>
+                        <ion-input type="number" placeholder="Cantidad" (keyup)="pilaPalet(pedidoTemp)" required name="stockReal" ngModel></ion-input>
+                    </ion-item>
+                </div>
+                <ion-row>
+                    <ion-col>
+                        <div>
+                            <label class="custom-control custom-checkbox">
+                            <input type="checkbox" class="custom-control-input" name="pila" ngModel>
+                            <span class="custom-control-indicator"></span>
+                            <span class="custom-control-description">Por pilas</span>
+                        </label>
+                        </div>
+                    </ion-col>
+                    <ion-col>
+                        <div class="alert alert-info " *ngIf="sumaStock >= 1">
+                            <div *ngIf="sumaStock  == 1">
+                                <strong>  {{ sumaStock }} </strong> Unidad
+
+                            </div>
+                            <div *ngIf="sumaStock  > 1">
+                                <strong>  {{ sumaStock }} </strong> Unidades
+
+
+                            </div>
+
+                            <input type="hidden" name="cantidad" [(ngModel)]="sumaStock">
+                            <input type="hidden" name="usuario" [(ngModel)]="usuario">
+                        </div>
+                    </ion-col>
+                    <!-- error de cantidad de stock insuficiente. -->
+                    <div class="alert alert-danger" *ngIf="errorCantidad">
+                        <strong>ERROR!</strong> La cantidad que quiere retirar es mayor al <strong> STOCK</strong> disponible.
+                    </div>
+                </ion-row>
+                <!-- falta la ubicación-. interior -->
+
+                <ion-item *ngIf="!error && palet1 && !errorCantidad">
+                    <ion-label>Ubicación</ion-label>
+                    <ion-select placeholder="Escoja una" required name="idUbicacion" ngModel>
+                        <ion-select-option *ngFor="let item of datas" [value]="item.idUbicacion"> {{ item.nombreUbicacion }}</ion-select-option>
+
+                    </ion-select>
+                </ion-item>
+            </ion-grid>
+            <input type="hidden" required name="cantidad" [(ngModel)]="sumaStock">
+            <input type="hidden" name="usuario" [(ngModel)]="usuario">
+            <input type="hidden" name="cantidad" [(ngModel)]="sumaStock">
+            <input type="hidden" name="usuario" [(ngModel)]="usuario">
+            <input type="hidden" name="instruccion" [(ngModel)]="instruccion">
+            <input type="hidden" name="idPalet" required [(ngModel)]="idPalet">
+
+            <div class="col-md-12" *ngIf="pedidoTemp.valid && !error && !errorCantidad">
+                <button type="submit" [disabled]="pedidoTemp.invalid" class="btn btn-outline-danger btn-block">Aceptar</button>
+            </div>
+        </form>
+    </ion-list>
+
+
+</ion-content>

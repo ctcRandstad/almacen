@@ -1,29 +1,35 @@
-<ion-app>
-  <ion-split-pane contentId="main-content">
+
     <ion-menu contentId="main-content" type="overlay">
       <ion-content>
         <ion-list id="inbox-list">
-          <ion-list-header>Inbox</ion-list-header>
-          <ion-note>hi&#64;ionicframework.com</ion-note>
-
-          <ion-menu-toggle auto-hide="false" *ngFor="let p of appPages; let i = index">
-            <ion-item routerDirection="root" [routerLink]="[p.url]" lines="none" detail="false" routerLinkActive="selected">
-              <ion-icon aria-hidden="true" slot="start" [ios]="p.icon + '-outline'" [md]="p.icon + '-sharp'"></ion-icon>
-              <ion-label>{{ p.title }}</ion-label>
+          <ion-list-header class="text-primary text-center">
+            <!-- <span class="usuario bg-main" >!{{usuario}}!</span>  -->
+            <ion-chip class="usuario" color="tertiary"> <ion-icon name="person-circle-outline"></ion-icon> 
+               <ion-label>Almacén | Descargas</ion-label></ion-chip>
+         </ion-list-header>
+         <br>
+          <ion-menu-toggle auto-hide="false" *ngFor="let p of data; let i = index">
+            <ion-item  (click)="mat(p.idMaterial)"  routerDirection="root"  lines="none" detail="false" routerLinkActive="selected">
+              <ion-icon aria-hidden="true" slot="start" [ios]="'albums-outline'" [md]="'albums-outline'"></ion-icon>
+              <ion-label>{{ p.nombreMaterial }}</ion-label>
             </ion-item>
           </ion-menu-toggle>
         </ion-list>
 
-        <ion-list id="labels-list">
-          <ion-list-header>Labels</ion-list-header>
-
-          <ion-item *ngFor="let label of labels" lines="none">
-            <ion-icon aria-hidden="true" slot="start" ios="bookmark-outline" md="bookmark-sharp"></ion-icon>
-            <ion-label>{{ label }}</ion-label>
-          </ion-item>
+        <ion-list id="labels-list" class="menu-header-lg">
+         
+            <img src="assets/img/logo_CTC_by-randstad-blanco-web.png" alt="Menu principal" width="100">
+         
         </ion-list>
       </ion-content>
+      <cite class="versions" >
+        <ion-list color="light">
+          <ion-item >
+            <ion-label>Solicitudes de palets</ion-label>
+            <ion-badge (click)="paginaPrincipal()"><ion-icon class="text-white" name="log-out-outline"></ion-icon></ion-badge>
+          </ion-item>
+        </ion-list>
+    </cite>
+      <cite class="version">Versión 2.0</cite>
     </ion-menu>
     <ion-router-outlet id="main-content"></ion-router-outlet>
-  </ion-split-pane>
-</ion-app>

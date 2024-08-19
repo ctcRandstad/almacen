@@ -1,0 +1,143 @@
+<ion-header>
+    <ion-toolbar>
+        <ion-buttons slot="start">
+            <!-- boton del menu que se encuentra en app-component -->
+            <ion-menu-button autoHide="false"></ion-menu-button>
+            <ion-back-button defaultHref="/main1"></ion-back-button>
+
+        </ion-buttons>
+        <ion-title class="text-center text-primary">Sección de stock</ion-title>
+    </ion-toolbar>
+</ion-header>
+
+<ion-content>
+
+    <ion-refresher slot="fixed" (ionRefresh)="doRefresh($event)">
+        <ion-refresher-content></ion-refresher-content>
+    </ion-refresher>
+
+    <!-- buscador -->
+    <ion-list>
+        <ion-item>
+            <ion-label class="text-primary h3">Buscar por medidas</ion-label>
+            <ion-toggle checked={{mostrarForm}} (ionChange)="myChange($event)"></ion-toggle>
+        </ion-item>
+    </ion-list>
+    <ion-grid *ngIf="mostrarForm">
+        <ion-row>
+            <ion-col size="3"></ion-col>
+            <ion-col>
+                <form #buscar="ngForm" (ngSubmit)="buscarP(buscar)">
+                    <div class="row">
+                        <div class="col-md-3">
+                            <div class="md-form form-sm">
+                                <input type="number" autocomplete="off" name="ancho" [(ngModel)]="ancho" id="form1" class="form-control form-control-lg ">
+                                <label for="form1" class="text-primary text-center">Ancho (cm)</label>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="md-form form-sm">
+                                <input type="number" autocomplete="off" name="largo" [(ngModel)]="largo" id="largo" class="form-control form-control-lg">
+                                <label for="largo" class="text-primary text-center">Largo (cm)</label>
+                            </div>
+                        </div>
+                        <div class="col-md-3 top">
+                            <button type="submit" class="btn btn-outline-primary btn-block ">Buscar</button>
+                        </div>
+
+                    </div>
+                </form>
+            </ion-col>
+        </ion-row>
+    </ion-grid>
+
+    <ion-grid *ngIf="movil">
+        <ion-row>
+            <ion-col>
+                <ion-list>
+                    <ion-item *ngFor="let item of data | filtro: filterQuery" class="let">
+                        <ion-col size="6" size-md>
+                            <ion-label text-wrap>
+                                <ion-text color="primary">
+                                    <h3>Categoría</h3>
+                                </ion-text>
+                            </ion-label>
+                            {{item.nombreCategoria}}
+                        </ion-col>
+                        <ion-col size="4" size-md>
+                            <ion-label text-wrap>
+                                <ion-text color="primary">
+                                    <h3>medidas (cm)</h3>
+                                </ion-text>
+                            </ion-label>
+                            {{ item.ancho }} x {{ item.largo}}
+                        </ion-col>
+                        <ion-col size="2" size-md>
+                            <ion-label text-wrap>
+                                <ion-text color="primary">
+                                    <h3>Stock </h3>
+                                </ion-text>
+                            </ion-label>
+                            {{item.stockReal | number }}
+                        </ion-col>
+
+                    </ion-item>
+
+                </ion-list>
+            </ion-col>
+        </ion-row>
+    </ion-grid>
+
+
+    <table *ngIf="!movil" animated class="table   table-hover">
+        <thead class=" tablaHead text-white">
+            <tr>
+                <td class="text-center"> Categoría </td>
+                <td> Ancho (cm)</td>
+                <td></td>
+                <td class="text-center"> Largo (cm)</td>
+                <td class="text-center">Stock Real (uds)</td>
+                <td>Stock Mínimo (uds)</td>
+                <td class="text-center">Estado</td>
+            </tr>
+        </thead>
+        <tbody>
+            <tr *ngFor="let item of data | filtro: filterQuery" class="let">
+                <td class="text-uppercase " width="150">{{ item.nombreCategoria }}</td>
+                <td class="text-center">{{ item.ancho }}</td>
+                <td class="text-lowercase"> <span class=" bajo text-muted">x</span></td>
+                <td class="text-center">{{ item.largo}}</td>
+                <td class="text-center">{{item.stockReal | number }}</td>
+                <td class="text-center">{{item.stockMinimo | number }}</td>
+                <td *ngIf="item.stockMinimo  > item.stockReal">
+                    <span class="list-group-item list-group-item-danger">
+                       Stock por debajo del límite.
+                  </span></td>
+                <td *ngIf="item.stockReal >= item.stockMinimo ">
+                    <span class="list-group-item list-group-item-success">
+                               Stock suficiente.
+                          </span></td>
+            </tr>
+        </tbody>
+    </table>
+    <ion-row *ngIf="finData">
+        <ion-col size="2">
+
+        </ion-col>
+        <ion-col *ngIf="!movil" size="3" offset="2">
+            <div class="alert alert-primary">
+                Todos los palet se han cargado
+            </div>
+        </ion-col>
+        <ion-col *ngIf="movil" size="12">
+            <div class="alert alert-primary">
+                Todos los palet se han cargado
+            </div>
+        </ion-col>
+    </ion-row>
+    <ion-infinite-scroll threshold="50px" (ionInfinite)="loadData($event)">
+        <ion-infinite-scroll-content loadingSpinner="lines" loadingText="Cargando...">
+        </ion-infinite-scroll-content>
+    </ion-infinite-scroll>
+
+</ion-content>

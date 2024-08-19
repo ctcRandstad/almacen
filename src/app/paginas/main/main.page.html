@@ -1,0 +1,77 @@
+<ion-header>
+    <ion-toolbar>
+        <ion-title class="text-center text-primary">{{main}}</ion-title>
+        <ion-buttons slot="start">
+            <ion-menu-button autoHide="false"></ion-menu-button>
+
+
+        </ion-buttons>
+    </ion-toolbar>
+</ion-header>
+
+<ion-content class="ion-padding">
+    <!-- servicio de entrega de material 'El carretillero' -->
+    <ion-grid>
+        <ion-row>
+            <ion-col size="4" size-lg routerLink="/comandas">
+                <ion-card class="alert alert-primary">
+                    <ion-card-header>
+                        <ion-card-header>
+                            <h1 class="text-center text-uppercase text-white"> Solicitudes Pendientes</h1>
+                        </ion-card-header>
+                    </ion-card-header>
+
+                    <ion-card-content class="h3 text-center">
+                        Retirada de solicitudes de palets y materiales.
+                    </ion-card-content>
+                </ion-card>
+
+            </ion-col>
+            <ion-col size="4" size-lg routerLink="/ubicaciones">
+                <ion-card class="alert alert-info">
+                    <ion-card-header>
+                        <ion-card-header>
+                            <h1 class="text-center text-uppercase"> comprobación huecos disponibles</h1>
+
+                        </ion-card-header>
+                    </ion-card-header>
+
+                    <ion-card-content class="h3 text-center">
+                        Visualizar materiales con huecos disponibles en las ubicaciones asignadas.
+                    </ion-card-content>
+                </ion-card>
+
+            </ion-col>
+
+            <!-- <ion-col size="4" size-lg (click)="stock()">
+                <ion-card class="alert alert-danger">
+                    <ion-card-header>
+                        <ion-card-header>
+                            <h1 class="text-center text-uppercase"> Stock <br>Materiales</h1>
+                        </ion-card-header>
+                    </ion-card-header>
+
+                    <ion-card-content class="h3 text-center">
+                        Visualizar las ubicaciones disponibles.
+                    </ion-card-content>
+                </ion-card>
+
+            </ion-col>
+
+            <ion-col size="4" size-lg (click)="listadoMateriales()">
+                <ion-card class="alert alert-warning">
+                    <ion-card-header>
+                        <ion-card-header>
+                            <h1 class="text-center text-uppercase">Listado <br> Materiales</h1>
+                        </ion-card-header>
+                    </ion-card-header>
+                    <ion-card-content class="h3 text-center">
+                        Entrada, ubicación y movimientos.
+                    </ion-card-content>
+                </ion-card>
+
+            </ion-col> -->
+        </ion-row>
+    </ion-grid>
+
+</ion-content>

@@ -1,0 +1,25 @@
+thead tr th {
+    position: sticky;
+    top: 0;
+    z-index: 10;
+    background: #7A726B;
+}
+
+.table-responsive {
+    height: 400px;
+    overflow: scroll;
+}
+
+.bg-palido {
+    background: #f1a33c!important;
+    color: #ffffff;
+}
+
+.tablaHead {
+    background: #7A726B!important;
+}
+
+
+.top{
+    margin-top: 20px;
+}

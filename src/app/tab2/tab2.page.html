@@ -1,0 +1,395 @@
+<ion-header>
+    <ion-toolbar>
+        <ion-buttons slot="start">
+            <!-- boton del menu que se encuentra en app-component -->
+            <ion-menu-button autoHide="false"></ion-menu-button>
+            <ion-back-button defaultHref="/palets"></ion-back-button>
+
+        </ion-buttons>
+        <ion-title class="text-center text-success">Pedidos descargados</ion-title>
+    </ion-toolbar>
+</ion-header>
+
+
+<ion-content *ngIf="!movil">
+
+    <ion-list class="card">
+        <form *ngIf="!alba" #filtroFecha="ngForm" (ngSubmit)="filtarF(filtroFecha)">
+            <div class="row">
+
+                <div class="col-md-2"></div>
+                <div class="col-md-3">
+                    Fecha inicial <input class="form-control" required type="date" name="fechaInicial" ngModel>
+                </div>
+                <div class="col-md-3">
+                    Fecha final <input class="form-control" required type="date" name="fechaFinal" ngModel>
+                </div>
+
+                <div class="col-md-3 bajar">
+                    <button type="submit" [disabled]="filtroFecha.invalid" class="btn btn-outline-primary">  <ion-icon name="search"></ion-icon> Buscar</button>
+                </div>
+
+
+            </div>
+        </form>
+        <ion-item></ion-item>
+
+        <table animated *ngIf="!ve &&  !alba && !filtro" class="table   table-hover ">
+            <thead class=" tablaHead text-white">
+                <tr>
+                    <td>Nro Pedido</td>
+                    <td>Nro Albarán</td>
+                    <td class="text-center">Fecha Pedido</td>
+                    <!-- <td>FechaPara</td> -->
+                    <td class="text-center">Fecha confirmado</td>
+                    <td class="text-center">Fecha descargado</td>
+                    <td>Estado pedido</td>
+                    <td>Albaran</td>
+                </tr>
+            </thead>
+            <tbody>
+                <tr *ngFor="let item of data | filtro: filterQuery">
+
+                    <td class="text-center">{{ item.idPedido }}</td>
+                    <td class="text-center">{{ item.idAlbaran}}</td>
+                    <td>{{ item.fecha | date: 'fullDate'}}</td>
+                    <!-- <td *ngIf="item.fechaConfirmado ">{{ item.paraFecha | date: 'fullDate'}}</td> -->
+                    <td *ngIf="item.fechaConfirmado ">{{ item.fechaConfirmado | date: 'fullDate'}}</td>
+                    <td class="text-danger " *ngIf="!item.fechaConfirmado ">Sin Data de confirmación</td>
+                    <td *ngIf="item.fechaConfirmado ">{{ item.fechaDescarga | date: 'fullDate'}}</td>
+                    <td *ngIf="item.cargado==1 "><span class="alert alert-success ">Descargado</span></td>
+                    <td colspan=2 *ngIf="item.albaran==1 ">
+                        <a class="btn btn-outline-primary btn-block" (click)="verPedidoAlbaran(item.idPedido) ">
+                            <ion-icon color="primary" name="print"></ion-icon>
+                        </a>
+                    </td>
+
+                </tr>
+            </tbody>
+
+        </table>
+
+        <!-- tabla de búsqueda -->
+        <table animated *ngIf="!ve  && !alba && filtro" class="table   table-hover ">
+            <thead class=" tablaHead text-white">
+                <tr>
+                    <td>Nro Pedido</td>
+                    <td>Nro Albarán</td>
+                    <td>Fecha Pedido</td>
+                    <!-- <td>FechaPara</td> -->
+                    <td>Confirmado</td>
+                    <td>Descargado</td>
+                    <td>Estado pedido</td>
+                    <td>Albaran</td>
+                </tr>
+            </thead>
+            <tbody>
+                <tr *ngFor="let item of data | filtro: filterQuery">
+
+                    <td>{{ item.idPedido }}</td>
+                    <td>{{ item.idAlbaran}}</td>
+                    <td>{{ item.fecha | date: 'fullDate'}}</td>
+                    <!-- <td *ngIf="item.fechaConfirmado ">{{ item.paraFecha | date: 'fullDate'}}</td> -->
+                    <td *ngIf="item.fechaConfirmado ">{{ item.fechaConfirmado | date: 'fullDate'}}</td>
+                    <td class="text-danger " *ngIf="!item.fechaConfirmado ">Sin Data de confirmación</td>
+                    <td *ngIf="item.fechaConfirmado ">{{ item.fechaDescarga | date: 'fullDate'}}</td>
+                    <td *ngIf="item.cargado==1 "><span class="alert alert-success ">Descargado</span></td>
+                    <td colspan=2 *ngIf="item.albaran==1 ">
+                        <a class="btn btn-outline-primary btn-block" (click)="verPedidoAlbaran(item.idPedido) ">
+                            <ion-icon color="primary" name="print"></ion-icon>
+                        </a>
+                    </td>
+
+                </tr>
+            </tbody>
+
+        </table>
+        <!-- comienza el albarán -->
+        <!-- comienza el albarán -->
+        <!-- comienza el albarán -->
+        <!-- comienza el albarán -->
+        <!-- comienza el albarán -->
+        <div *ngIf="alba" class="impresion" id="impresion">
+
+            <div class="row">
+                <div class="col-md-6 ">
+                    <ion-card>
+                        <ion-card-header>
+                            <ion-card-title>
+                                <h4 class="h2">SERRERIAS GAROLERA, S.L</h4>
+                            </ion-card-title>
+                            <div class="row ">
+                                <div class="col-md-6">
+                                    <ion-card-content class="text-success">Ctra. Esclet s/n. Apartat 59</ion-card-content>
+
+                                </div>
+                                <div class="col-md-6">
+                                    <ion-card-content class="text-success">Fax: 972 46 31 58</ion-card-content>
+
+                                </div>
+                                <div class="col-md-6">
+                                    <ion-card-content class="text-success">Tel: 972 46 31 79</ion-card-content>
+
+                                </div>
+                                <div class="col-md-6">
+                                    <ion-card-content class="text-success">Tel: 972 46 02 40</ion-card-content>
+
+                                </div>
+                            </div>
+                            <div class="flex-row">
+                                <!-- <a class="card-link">Card link</a> -->
+                                <a class="card-link text-success">14244 Cassà de la Selva (Girona)</a>
+                            </div>
+                        </ion-card-header>
+                    </ion-card>
+                </div>
+                <div class="col-md-6">
+                    <ion-card>
+                        <ion-card-title>
+                            &nbsp; &nbsp;
+                            <h1 class="font-weight-bold mb-2 h1">ALBARÁN <span class="alert alert-danger">N.°{{ idAlbaran }}</span></h1>
+                        </ion-card-title>
+                        <ul class="list-group list-group-flush">
+                            <li class="list-group-item h6">
+                                <span class="text-primary font-weight-bold h5">PEDIDO Nro. </span><span class="alert alert-danger">N.° : {{ idPedido }}</span></li>
+                            <li class="list-group-item h6">
+                                <span class="text-primary font-weight-bold ">FECHA: </span>{{ fechas | date: 'fullDate'}}</li>
+                        </ul>
+                    </ion-card>
+                </div>
+                <div class="col-md-12 border h4">
+                    <ion-card>
+                        <ul class="list-group list-group-flush">
+                            <li class="list-group-item"><span class="text-info">Cliente:  </span> Srs. CTC EXTERNALIZACIÓN</li>
+                            <li class="list-group-item">
+                                <div class="row">
+                                    <div class="col-md-3"><span class="text-info">Domicilio</span><br> Carrer de la Papelera Torras, s/n
+                                    </div>
+                                    <div class="col-md-3"></div>
+                                    <div class="col-md-5"><span class="text-info">Población</span><br> 17857 – Sant Joan les Fonts (Girona)
+                                    </div>
+                                </div>
+                            </li>
+                        </ul>
+                    </ion-card>
+                </div>
+                <div class="col-md-12 h2">
+                    <ion-card class="border">
+                        <table class="table table-bordered  h3">
+                            <thead>
+                                <tr class="font-weight-bold">
+                                    <th width="250">CANTIDAD</th>
+                                    <!-- <th>TRATAMIENTO</th> -->
+                                    <th class="text-center">Referencias</th>
+                                    <th class="text-center">Estado</th>
+                                </tr>
+                            </thead>
+                            <tbody class="font-weight-bold">
+                                <tr *ngFor="let item of albaran">
+                                    <th *ngIf="item.validado == 0 ">
+                                        <!-- suma -->
+                                        <span *ngIf="show && idDetalle == item.idDetalle" (click)="suma()">
+                                                <span class="btn btn-success"> <ion-icon name="add"></ion-icon> </span>
+                                        </span>&nbsp; &nbsp;
+                                        <!-- cantidad -->
+                                        <span class="btn btn-outline-warning" *ngIf="!show" (click)="modCant(item.cantidadE , item.idDetalle)">
+                                                {{item.cantidadE}}
+                                           </span>
+                                        <!-- cantidadNueva -->
+                                        <span *ngIf="show && idDetalle == item.idDetalle">{{ canmtidadNueva }}</span> &nbsp; &nbsp;
+                                        <!-- restar -->
+                                        <span *ngIf="show && idDetalle == item.idDetalle" (click)="resta()">
+                                                <span class="btn btn-primary"> <ion-icon name="remove"></ion-icon> </span>
+                                        </span>
+                                    </th>
+                                    <th *ngIf="item.validado == 1 &&  !show ">
+                                        {{item.cantidadE}}
+                                    </th>
+
+                                    <!-- 
+                                    <th *ngIf="!show ">{{item.tratamiento}}</th>
+                                    <span *ngIf="show && idDetalle == item.idDetalle ">{{ item.tratamiento }}</span> -->
+
+                                    <!-- <th  class="text-uppercase">{{item.nombreCategoria }} - {{item.ancho}} x {{item.largo}}</th> -->
+                                    <th *ngIf="!show " class="text-uppercase">{{item.nombreCategoria }} - {{item.ancho}} x {{item.largo}}</th>
+                                    <th *ngIf="show && idDetalle == item.idDetalle && item.validado == 0" class="text-uppercase">{{item.nombreCategoria }} - {{item.ancho}} x {{item.largo}}</th>
+                                    <th class="text-success" *ngIf="item.validado == 1 && !show && item.eliminado == 0">
+                                        <ion-icon name="checkmark-circle-outline"></ion-icon> Validado
+                                    </th>
+                                    <th class="text-danger" (click)="recuperar(item.idDetalle,item.idPalet ,item.idPedido,item.cantidad)" *ngIf="item.eliminado == 1 && !show">
+                                        <ion-icon name="trash"></ion-icon> Eliminado
+                                    </th>
+                                </tr>
+                            </tbody>
+                        </table>
+                        <table class="table table-bordered h3">
+                            <tr>
+                                <td colspan="5" class="text-primary text-uppercase text-center">
+                                    Total palets
+                                </td>
+                                <td colspan="2" class="text-primary text-uppercase text-center">agente</td>
+                                <td colspan="2" class="text-primary text-uppercase text-center">bultos</td>
+
+
+                            </tr>
+                            <tr>
+                                <th class="h4 text-center" colspan="5">{{total}} Unidades</th>
+                                <td *ngIf="!m " colspan="2"><input required name="agente" ngModel type="text" class="form-control"></td>
+                                <td class="text-primary text-center h4 text-uppercase" *ngIf="m" colspan="2">{{ agente1 }}</td>
+                                <td class="text-primary text-center h4 text-uppercase" colspan="2">{{ albaran.length}}</td>
+
+                            </tr>
+
+                        </table>
+
+                    </ion-card>
+                </div>
+            </div>
+
+        </div>
+
+    </ion-list>
+    <ion-refresher slot="fixed" (ionRefresh)="doRefresh($event)">
+        <ion-refresher-content pullingIcon="arrow-dropdown" pullingText="Pull to refresh" refreshingSpinner="circles" refreshingText="Actualizando...">
+        </ion-refresher-content>
+    </ion-refresher>
+</ion-content>
+
+<ion-content *ngIf="movil">
+    <ion-grid *ngIf="!alba">
+        <ion-list>
+            <ion-item>
+                <ion-label>Buscar por fechas</ion-label>
+                <ion-toggle checked={{mostrarForm}} (ionChange)="myChange($event)"></ion-toggle>
+            </ion-item>
+        </ion-list>
+
+        <form *ngIf="!alba && mostrarForm" #filtroFecha="ngForm" (ngSubmit)="filtarF(filtroFecha)">
+            <div class="row">
+                <div class="col-md-3">
+                    Fecha inicial <input class="form-control" required type="date" name="fechaInicial" ngModel>
+                </div>
+                <div class="col-md-3">
+                    Fecha final <input class="form-control" required type="date" name="fechaFinal" ngModel>
+                </div>
+
+                <div class="col-md-3 bajar">
+                    <button type="submit" [disabled]="filtroFecha.invalid" class="btn btn-outline-primary btn-block">  <ion-icon name="search"></ion-icon> Buscar</button>
+                </div>
+            </div>
+        </form>
+
+        <br>
+
+        <ion-row>
+            <ion-col>
+                <ion-list>
+                    <ion-item *ngFor="let item of data">
+                        <ion-col size="3" size-md (click)="verPedidoAlbaran(item.idPedido) ">
+                            <ion-label text-wrap>
+                                <ion-text color="primary">
+                                    <h3>Pedido</h3>
+                                </ion-text>
+                            </ion-label>
+
+                            {{item.idPedido}}
+                        </ion-col>
+                        <ion-col size="3" size-md (click)="verPedidoAlbaran(item.idPedido) ">
+                            <ion-label text-wrap>
+                                <ion-text color="primary">
+                                    <h3>Albarán</h3>
+                                </ion-text>
+                            </ion-label>
+                            {{ item.idAlbaran }}
+                        </ion-col>
+                        <ion-col size="6" size-md (click)="verPedidoAlbaran(item.idPedido) ">
+                            <ion-label text-wrap>
+                                <ion-text class="text-center" color="primary">
+                                    <h3>Fecha</h3>
+                                </ion-text>
+                            </ion-label>
+                            {{ item.fechaConfirmado | date: 'EEEE , dd-MM-yy'}}
+
+                        </ion-col>
+                    </ion-item>
+
+                </ion-list>
+            </ion-col>
+        </ion-row>
+    </ion-grid>
+
+
+    <!-- comienza el albarán... -->
+    <ion-grid *ngIf="alba">
+        <ion-item>
+            <ion-note slot="start">ALBARÁN Nro. </ion-note>
+            <ion-label>
+                <h3 class="font-weight-bold mb-2 h3"><span class="alert alert-danger">{{ idAlbaran }}</span></h3>
+            </ion-label>
+        </ion-item>
+        <ion-item>
+            <ion-note slot="start">PEDIDO Nro. </ion-note>
+            <ion-label>
+                <h3 class="font-weight-bold mb-2 h3"><span class="alert alert-danger">{{ idPedido }}</span></h3>
+            </ion-label>
+        </ion-item>
+        <ion-item>
+            <ion-note slot="start">FECHA: </ion-note>
+            <ion-label>
+                <h3 class="font-weight-bold mb-2 h3"><span class="alert alert-danger">{{ fechas | date: 'fullDate'}}</span></h3>
+            </ion-label>
+        </ion-item>
+
+        <ion-card class="text-center">
+            <ion-card-header>
+                <ion-card-title>Detalle del pedido</ion-card-title>
+            </ion-card-header>
+        </ion-card>
+
+        <ion-row>
+            <ion-col>
+                <ion-list>
+                    <ion-item *ngFor="let item of albaran">
+
+
+                        <ion-note color="dark" slot="start" class="text-uppercase"> {{item.cantidadE}}</ion-note>
+
+                        <ion-note color="secondary" slot="end" class="text-uppercase"> {{item.nombreCategoria }} - {{item.ancho}} x {{item.largo}}</ion-note>
+
+
+                        <ion-note color="secondary" slot="end" class="text-uppercase">
+
+                            <span class="text-success" *ngIf="item.validado == 1 && !show && item.eliminado == 0">
+                                        Validado
+                                    </span>
+                            <span class="text-danger" (click)="recuperar(item.idDetalle,item.idPalet ,item.idPedido,item.cantidad)" *ngIf="item.eliminado == 1 && !show">
+                                       Eliminado
+                                     
+                                    </span>
+                        </ion-note>
+                    </ion-item>
+                </ion-list>
+            </ion-col>
+        </ion-row>
+        <ion-list>
+            <ion-item>
+                <ion-label>Agente</ion-label>
+                <ion-note color="danger" slot="end" class="text-uppercase">{{ agente1 }}</ion-note>
+            </ion-item>
+            <ion-item>
+                <ion-label>Total palet</ion-label>
+                <ion-note color="danger" slot="end" class="text-uppercase">{{total}} Unidades</ion-note>
+            </ion-item>
+
+            <ion-item>
+                <ion-label>Bultos</ion-label>
+                <ion-note color="danger" slot="end" class="text-uppercase">{{ albaran.length}}</ion-note>
+            </ion-item>
+        </ion-list>
+
+    </ion-grid>
+    <ion-refresher slot="fixed" (ionRefresh)="doRefresh($event)">
+        <ion-refresher-content pullingIcon="arrow-dropdown" pullingText="Pull to refresh" refreshingSpinner="circles" refreshingText="Actualizando...">
+        </ion-refresher-content>
+    </ion-refresher>
+</ion-content>

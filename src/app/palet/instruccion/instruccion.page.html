@@ -1,0 +1,106 @@
+<ion-header>
+    <ion-toolbar>
+        <ion-buttons slot="start">
+            <!-- boton del menu que se encuentra en app-component -->
+            <ion-menu-button autoHide="false"></ion-menu-button>
+            <ion-back-button defaultHref="/"></ion-back-button>
+
+        </ion-buttons>
+        <ion-title class="text-center text-primary">Consulta de instrucciones</ion-title>
+    </ion-toolbar>
+</ion-header>
+
+<ion-content class="ion-padding" *ngIf="!movil">
+    <section class="top animated fadeIn">
+        <div class="row">
+            <div class="col-md-12">
+
+
+                <div *ngIf="mostrarError" class="alert alert-danger">
+                    Instrucción no encontrada
+                </div>
+
+            </div>
+        </div>
+        <div class="row">
+
+            <div class="col-md-6 arriba">
+                <div class="md-form input-group mb-2">
+                    <input autocomplete="off" type="number" (keyup.enter)="buscarInstruccion(instruccion)" class="form-control" name="instruccion" [(ngModel)]="inst" #instruccion="ngModel" placeholder="Buscar Instrucción" aria-label="Recipient's username" aria-describedby="button-addon2">
+                    <div class="input-group-append">
+                        <button class="btn  btn-primary" (click)="buscarInstruccion(instruccion)" type="button" id="button-addon2">   <ion-icon ios="ios-search" md="md-search"></ion-icon> Buscar</button>
+                    </div>
+                    <div class="input-group-append">
+                        <button class="btn  btn-danger" (click)="nueva()" type="button" id="button-addon2"> <ion-icon ios="ios-trash" md="md-trash"></ion-icon> Limpiar</button>
+                    </div>
+                </div>
+
+            </div>
+            <div class="col-md-5 arribas">
+                <form #buscar="ngForm" (ngSubmit)="buscarPaIn(buscar)">
+                    <div class="row">
+                        <div class="col-md-3">
+                            <div class="md-form form-sm">
+                                <input mdbInput type="number" autocomplete="off" name="ancho" [(ngModel)]="ancho" id="form1" class="form-control  ">
+                                <label for="form1" class="text-primary text-center">Ancho  (cm)</label>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="md-form form-sm">
+                                <input mdbInput type="number" autocomplete="off" name="largo" [(ngModel)]="largo" id="largo" class="form-control ">
+                                <label for="largo" class="text-primary text-center">Largo (cm)</label>
+                            </div>
+                        </div>
+                        <div class="col-md-3 top">
+                            <button type="submit" class="btn btn-default ">Buscar</button>
+                        </div>
+
+                    </div>
+                </form>
+            </div>
+
+        </div>
+
+        <table class="table " *ngIf="sinSpiner">
+            <thead class="tablaHead text-white">
+                <tr>
+
+                    <td>Categoría</td>
+                    <td>Instrucción</td>
+                    <td>Medidas (cm)</td>
+                    <td>Entrada</td>
+                    <td>Salida</td>
+                    <td>Stock</td>
+                    <td>Sobrantes</td>
+                    <td class="text-center">Estado</td>
+                </tr>
+            </thead>
+
+            <tbody>
+                <tr *ngFor="let item of data">
+                    <td class="">{{item.nombreCategoria}}</td>
+                    <td class="">{{item.instruccion}}</td>
+                    <td class="">{{item.ancho}} x {{item.largo}}</td>
+                    <td class="text-success">
+                        <ion-icon ios="ios-arrow-dropup" md="md-arrow-dropup"></ion-icon>{{item.iEntrada}}
+                    </td>
+                    <td class="text-danger">
+                        <ion-icon ios="ios-arrow-dropdown" md="md-arrow-dropdown"></ion-icon>{{item.iSalida}}</td>
+                    <td class="">
+                        <ion-badge color="primary">{{item.iStock}}</ion-badge>
+                    </td>
+                    <td *ngIf="item.sobrante == 1" class="text-primary text-center">
+                        <ion-icon ios="ios-checkmark" md="md-checkmark"></ion-icon>
+                    </td>
+                    <td *ngIf="item.sobrante == 0" class="text-primary text-center">--------</td>
+
+                    <td class="alert alert-success text-center" *ngIf="item.estadoI == 1">Terminado</td>
+                    <td class="alert alert-primary text-center" *ngIf="item.estadoI == 0">Activa</td>
+                </tr>
+
+
+            </tbody>
+        </table>
+    </section>
+
+</ion-content>

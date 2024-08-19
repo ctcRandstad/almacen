@@ -1,0 +1,53 @@
+<ion-header>
+    <ion-toolbar>
+        <ion-buttons slot="start">
+            <!-- boton del menu que se encuentra en app-component -->
+            <ion-menu-button autoHide="false"></ion-menu-button>
+            <ion-back-button defaultHref="/main1"></ion-back-button>
+
+        </ion-buttons>
+        <ion-title class="text-center text-primary">Sección de palet</ion-title>
+    </ion-toolbar>
+</ion-header>
+
+<ion-content class="ion-padding top">
+    <ion-grid>
+        <ion-row>
+            <ion-col size="3" size-lg routerLink="../tabs/tab1">
+                <ion-card class="alert alert-success">
+                    <ion-card-header>
+                        <h1 class="text-center text-uppercase "> entrada</h1>
+                    </ion-card-header>
+                    <ion-card-content class="h3 text-center">
+                        Esta opción es para la descarga de camiones y visualizar pedidos. <br>
+                    </ion-card-content>
+                </ion-card>
+
+            </ion-col>
+            <ion-col size="3" size-lg routerLink="/salida/normal/">
+                <ion-card class="alert alert-secondary">
+                    <ion-card-header>
+                        <h1 class="text-center text-uppercase "> movimientos</h1>
+                    </ion-card-header>
+                    <ion-card-content class="h3 text-center">
+                        Esta opción es para dar entrada y salida a/de fábrica.
+                    </ion-card-content>
+                </ion-card>
+            </ion-col>
+
+            <ion-col size="3" size-lg routerLink="/instruccion">
+                <ion-card class="alert alert-danger">
+                    <ion-card-header>
+                        <h1 class="text-center text-uppercase "> Instrucción</h1>
+                    </ion-card-header>
+                    <ion-card-content class="h3 text-center">
+                        En esta opción podrá consultar el estado de las instrucciones.
+                    </ion-card-content>
+                </ion-card>
+
+            </ion-col>
+
+        </ion-row>
+    </ion-grid>
+
+</ion-content>
