@@ -66,8 +66,7 @@
             </tr>
         </thead>
         <tbody *ngIf="!nadaDatas">
-
-            <tr *ngFor="let item of datas" [ngClass]="{'bg-danger text-white': item.retiro == 1}">
+            <tr *ngFor="let item of datas" [ngClass]="{'table-danger': item.retiro == 1}">
                 <td>{{ item.dataC | date: 'medium'}}</td>
                 <td class="text-capitalize">{{ item.nombreMaterial}}</td>
                 <td class="text-capitalize">{{ item.desOpcional}}</td>
@@ -76,9 +75,8 @@
                 <td>{{ item.solicitante}}</td>
                 <td (click)="desestimarAhora(item.idComanda)">
                     <ion-button expand="full" fill="outline" *ngIf="item.retiro == 0">Hecho</ion-button>
-                    <ion-button expand="full" fill="outline" color="secondary" *ngIf="item.retiro == 1">Hecho</ion-button>
+                    <ion-button expand="full" fill="outline" color="secondary" *ngIf="item.retiro == 1">Hecho </ion-button>
                 </td>
-
             </tr>
         </tbody>
 
