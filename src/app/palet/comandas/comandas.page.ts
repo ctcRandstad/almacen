@@ -62,7 +62,7 @@ export class ComandasPage  {
   async desestimarPalet(nombreCategoria:any, ancho:any , largo:any) {
     const alert = await this.alertController.create({
       header: 'Desestimar! ' + nombreCategoria + ' ' + ancho + ' x ' + largo,
-      message: '¿Quiere <strong>ELIMINAR</strong> la comanda?!!!',
+      message: '¿Quiere ELIMINAR la comanda?!!!',
       buttons: [
         {
           text: 'No, Cancelar',
@@ -90,11 +90,17 @@ export class ComandasPage  {
   ionViewWillEnter(){
   
    
-    setInterval(()=>{
+    this.getComandasPalet();
+    this.getComandasMaterial();
+   
+  }
+
+  handleRefresh(event:any) {
+    setTimeout(() => {
       this.getComandasPalet();
       this.getComandasMaterial();
-
-    },1000)
+      event.target.complete();
+    }, 2000);
   }
 
   data:any=[];
@@ -180,6 +186,7 @@ myFunction(item:Comanda){
   if (this.instruccion == null ) {
     this._sobpeti.comprobarStockNuevo(this.cantidadPalet , this.idPalet)
     .subscribe(res=> {
+      
       if (res == 'cero') {
          this.cero = true;
          return;
@@ -211,10 +218,10 @@ myFunction(item:Comanda){
 }
 
 desestimar1(){
-  this._sobpeti.desestimar1(this.idComanda)
+  
+  this._sobpeti.desestimar(this.idComanda)
   .subscribe(res=>{
    
-    
     if (res == 'desestimado') {
       SplashScreen.show();
           location.reload();

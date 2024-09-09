@@ -23,7 +23,10 @@ export class AppComponent {
     private _ser:MaterialService,
   ) {
     this.initializeApp();
-    this._push.configuracionInicial();
+    setTimeout(()=>{
+
+      this._push.configuracionInicial();
+    },1000)
   }
 
   rol:any;

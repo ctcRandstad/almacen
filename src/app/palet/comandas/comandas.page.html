@@ -112,4 +112,8 @@
         <ion-button color="danger" fill="outline" size="large" (click)="desestimarPalet(nombreCategoria, ancho , largo)">Desestimar</ion-button>
 
     </ion-card>
+
+    <ion-refresher slot="fixed" (ionRefresh)="handleRefresh($event)">
+        <ion-refresher-content></ion-refresher-content>
+      </ion-refresher>
 </ion-content>

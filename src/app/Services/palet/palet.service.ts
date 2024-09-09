@@ -182,8 +182,10 @@ export class PaletService {
         return e
       }));
   }
-  desestimar1(idComanda:number):Observable<any>{
-    return this.http.post(this.url +"pedido/pedido.php?id=desestimarComandaM1",{':number': idComanda})
+  desestimar1(id:any):Observable<any>{
+    console.log(id);
+    
+    return this.http.post(this.url +"pedido/pedido.php?id=desestimarComandaM1",{':id': id})
     .pipe(
       map((e)=> {
         return e
