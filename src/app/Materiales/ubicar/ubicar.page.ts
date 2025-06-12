@@ -7,6 +7,7 @@ import { MaterialService } from 'src/app/Services/material/material.service';
 import { ToastService } from 'src/app/Services/toast.service';
 import { VariosService } from 'src/app/Services/varios/varios.service';
 import { Keyboard } from '@capacitor/keyboard';
+import { LoadingController } from '@ionic/angular';
 
 @Component({
   selector: 'app-ubicar',
@@ -28,6 +29,7 @@ export class UbicarPage implements OnInit {
     private ruta:Router,
     private rutaActiva: ActivatedRoute,
     private _material:MaterialService,
+      public loadingController: LoadingController,
     
     ) {}
 
@@ -139,106 +141,52 @@ no(){
 
 
   boton!:boolean;
-  ubicar(action:any){
-    this.boton = true;
-    
-    this._material.materialMaquina(action.value.codigoSap)
-    .subscribe(data=>{ 
-        
-       if (data != 'error') {
-           let a  =  confirm('Esta referencia se encuentra ubicada en ' + data[0].nombre + ' Bulto # '  + data[0].idM);
-               if (a) {
+processing = false; // Agrega esto como propiedad de clase
 
-                this._material.materialEstanterias(action.value.codigoSap,this.idMaterial, this.idEstanteria)
-                .subscribe(data=>{ 
-              //  console.log(data);
-               
-                   if (data != 'error') {
-                    let b  =  confirm('Hay más bulto de esta referencia en otra ubicación no asignada' );
+async ubicar(action: any) {
+  if (this.processing) return;
+  this.processing = true;
 
-                      if (b) {
-                         
-                          this.datos = action.value
-                        let ubicar1 =  this._varios.ubicarMaterial(this.datos)
-                          .subscribe(data=>{
-                            if (data == 'success') {
-                              this.onClick1();
-                            }
-                          })
-                        setTimeout(()=>{
-                          ubicar1.unsubscribe();
-                         
-                        },2000)
-                      } else {
-                        this.onClick1();
-                      }
-                   }else{
-                      
-                        this.datos = action.value
-                      let ubicar1 =  this._varios.ubicarMaterial(this.datos)
-                        .subscribe(data=>{
-                          if (data == 'success') {
-                            this.onClick1();
-                          }
-                        });
-                        setTimeout(()=>{
-                          ubicar1.unsubscribe();
-                        
-                     },2000)
-                   }
-                });
-              
-              }else{
-                
-                this.onClick1();
-               }
-       }else{
-         // no hay material 
+  const loading = await this.loadingController.create({
+    message: 'Ubicando material...',
+    mode: 'ios'
+  });
+  await loading.present();
 
-         this._material.materialEstanterias(action.value.codigoSap,this.idMaterial, this.idEstanteria)
-         .subscribe(data=>{ 
-       //  console.log(data);
-        
-            if (data != 'error') {
-             let b  =  confirm('Hay más bulto de esta referencia en otra ubicación no asignada' );
+  const { codigoSap } = action.value;
+  this.datos = action.value;
 
-               if (b) {
-                  
-                   this.datos = action.value
-                 let ubicar1 =  this._varios.ubicarMaterial(this.datos)
-                   .subscribe(data=>{
-                     if (data == 'success') {
-                       this.onClick1();
-                     }
-                   })
-                 setTimeout(()=>{
-                  ubicar1.unsubscribe();
-                        
-                 },2000)
-               } else {
-                 this.onClick1();
-               }
-            }else{
-            
-              this.datos = action.value
-            let ubicar1 =  this._varios.ubicarMaterial(this.datos)
-              .subscribe(data=>{
-               
-                if (data == 'success') {
-                  this.onClick1();
-                }
-              });
-              setTimeout(()=>{
-                ubicar1.unsubscribe();
-                
-        },2000)
-            }
-         });
-       
+  const sub = this._varios.ubicarMaterial(this.datos).subscribe({
+    next: resp => {
+      console.log(resp);
+      
+      if (resp.status === 'success') {
+        this.onClick1();
+      } else {
+        alert(resp.message || 'No se pudo ubicar.');
+      }
+      this.terminarUbicacion();
+      loading.dismiss();
+    },
+    error: () => {
+      alert('Error al ubicar. Verifica tu conexión.');
+      this.terminarUbicacion();
+      loading.dismiss();
+    }
+  });
 
-       }
-    }); // fin de la verificación en máquina! 
-  }
+  setTimeout(() => {
+    sub.unsubscribe();
+    this.terminarUbicacion();
+    loading.dismiss();
+  }, 3000);
+}
+
+
+terminarUbicacion() {
+  this.boton = false;
+  this.processing = false;
+}
 
 
   error:boolean = false;
@@ -250,61 +198,48 @@ no(){
   estanteriasDatas:any=[];
   codigoSap!:number;
   idM!:number;
-  onClick(item:any){
-    
-    this.individual = true;
-    if (this.fifoE == 1) {
-          if (item.idM !== this.minIdMaterial) {
-            alert('Debe colocar el bulto mas pequeño...');
-            SplashScreen.show();
-            location.reload();
-            
-          }else{
-            this.datos = item;
-         }
-    } else {
-          this.datos = item;
-    }
+onClick(item: any) {
+  this.individual = true;
 
-    
- // buscamo la estanteria disponible
- this._varios.getUbicacionMaterial(this.datos.codigoSap,this.idMaterial)
- .subscribe(res=>{
- 
-   if (res != 'error') {
-     this.estanteriasDatas=res;
-     for (let i = 0; i < this.estanteriasDatas.length; i++) {
-       if ( this.estanteriasDatas[i].libres > 0) {
-         const element = this.estanteriasDatas[i].idEstanteria;
-         this.destino.push(element);
-         
-       }
-       
-
-      }
-      
-      if (this.destino.length == 0) {
-         alert('Error, no hay más huecos disponibles para ubicar. Dirígete al departemanto técnico. ');
-         SplashScreen.show();
-          location.reload();
-      }
-   } else {
-     alert('Error, no hay ubicación asociada al material. Dirígete al departemanto técnico. ');
-     SplashScreen.show();
-     location.reload();
-   }
-
- })
-
-    setTimeout(() => {
-      this.sInput.setFocus();
-    }, 500);
-    setTimeout(() => {
-      // this.keyboard.hide();
-        Keyboard.hide();
-     }, 800);
+  // FIFO obligatorio: se controla el bulto más pequeño
+  if (this.fifoE === 1 && item.idM !== this.minIdMaterial) {
+    alert('Debe colocar el bulto más pequeño...');
+    SplashScreen.show();
+    location.reload();
+    return;
   }
- 
+
+  this.datos = item;
+
+  // Buscar estanterías disponibles para ese código SAP
+this._varios.getUbicacionMaterial(this.datos.codigoSap, this.idMaterial).subscribe(res => {
+  if (res.status !== 'success' || !Array.isArray(res.data)) {
+    this.mostrarError('No hay ubicación asociada al material. Dirígete al departamento técnico.');
+    return;
+  }
+
+  this.estanteriasDatas = res.data;
+  this.destino = this.estanteriasDatas
+    .filter((e: any) => e.libres > 0)
+    .map((e: any) => e.idEstanteria);
+
+  if (this.destino.length === 0) {
+    this.mostrarError('No hay más huecos disponibles para ubicar. Dirígete al departamento técnico.');
+  }
+});
+
+
+  // Enfocar input y ocultar teclado
+  setTimeout(() => this.sInput.setFocus(), 500);
+  setTimeout(() => Keyboard.hide(), 800);
+}
+
+private mostrarError(mensaje: string) {
+  alert('⚠️ ' + mensaje);
+  SplashScreen.show();
+  location.reload();
+}
+
   
   ubi:any;
   disponibleEstanteria:number=0;
@@ -313,35 +248,38 @@ no(){
   bienE!:boolean;
   destino:any[] = [];
   idEstanteria!:number;
-  scan(estanteria:any ){
+scan(estanteria: any): void {
   
-    this.idEstanteria = estanteria;
-    let a = this.destino.includes(this.idEstanteria);
-    if (a) { 
-      this._varios.estanteriaById(this.idEstanteria)
-      .subscribe(data=>{ 
-    
-        this.nomUbi = data[0].nombre;
-      });
-      this.bienE = true;
-       this.errorU=false;
-    } else {
-      this.errorU=true;
-      this.bienE=false;
-      setTimeout(() => {
-            this.sInput.setFocus();
-              this.ubi=null;
-          }, 500);
-          setTimeout(() => {
-            // this.keyboard.hide();
-            Keyboard.hide();
-            this.ubi=null;
-            this.errorU=false;
-        }, 3000);
-           
-    }
+  this.idEstanteria = estanteria;
 
+  const esDestinoValido = this.destino.includes(Number(this.idEstanteria));
+
+
+  if (esDestinoValido) {
+    this._varios.estanteriaById(this.idEstanteria).subscribe({
+      next: (data) => {
+        this.nomUbi = data?.[0]?.nombre || 'Ubicación desconocida';
+        this.bienE = true;
+        this.errorU = false;
+      },
+      error: () => {
+        this.mostrarError('No se pudo obtener el nombre de la estantería.');
+      }
+    });
+  } else {
+    this.errorU = true;
+    this.bienE = false;
+
+    setTimeout(() => this.sInput.setFocus(), 500);
+
+    setTimeout(() => {
+      Keyboard.hide();
+      this.ubi = null;
+      this.errorU = false;
+    }, 3000);
   }
+}
+
 
   doRefresh(event:any) {
     setTimeout(() => {

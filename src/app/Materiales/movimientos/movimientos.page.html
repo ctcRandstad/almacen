@@ -13,26 +13,52 @@
 
 <ion-content class="ion-padding">
 
-    <div class="row" *ngIf="!movi">
-        <div class="col-md-3 top" *ngFor="let item of dataU">
-            <ion-card (click)="movimientos(item)" [ngClass]="{'referAsiganada': item.asignada==1 , 'refer' : item.asignada == 0}">
-                <ion-card-header>
-                    <!-- <ion-card-subtitle>{{ item.codigoSap}}</ion-card-subtitle> -->
-                    <ion-card-title class="text-white text-center">{{item.nombre}}</ion-card-title>
-                </ion-card-header>
-            </ion-card>
-            <span class="dispos" *ngIf="item.disponible < 100">{{item.disponible}}</span>
-            <span class="dispos" *ngIf="item.disponible >= 100">100</span>
-        </div>
-    </div>
+   <div class="row g-3" *ngIf="!movi">
+  <div class="col-12 col-sm-6 col-md-4 col-lg-3" *ngFor="let item of dataU">
+    <ion-card
+      (click)="movimientos(item)"
+      [ngClass]="{
+        'refer-asignada': item.asignada == 1,
+        'refer-libre': item.asignada == 0
+      }"
+      class="modern-card shadow-sm position-relative"
+    >
+      <ion-card-header class="text-center">
+        <ion-card-title class="fw-bold text-white">
+          {{ item.nombre }}
+        </ion-card-title>
+      </ion-card-header>
+
+      <!-- Badge de disponible -->
+      <div
+        class="badge-dispo"
+        [ngClass]="{
+          'bg-danger': item.disponible < 20,
+          'bg-warning': item.disponible >= 20 && item.disponible < 100,
+          'bg-success': item.disponible >= 100
+        }"
+      >
+        {{ item.disponible >= 100 ? '100+' : item.disponible }}
+      </div>
+    </ion-card>
+  </div>
+</div>
+
 
     <!-- estanteria no asignada -->
     <div class="row justify-content-md-center" *ngIf="movi && asignada == 0">
 
-        <div class="col-md-auto alert-primary1"> {{ nombreEs }} </div>&nbsp;&nbsp;&nbsp;
-        <div class="col-md-auto alert-primary12" (click)="back()">
-            <ion-icon name="arrow-back"></ion-icon> Atras
+     <div class="d-flex align-items-center gap-3 mb-3">
+        <div class="alert-tag text-primary fw-semibold px-3 py-2 shadow-sm rounded">
+            {{ nombreEs }}
         </div>
+
+        <div class="alert-action text-white bg-primary px-3 py-2 rounded shadow-sm cursor-pointer d-flex align-items-center" (click)="back()">
+            <ion-icon name="arrow-back" class="me-2"></ion-icon>
+            Atrás
+        </div>
+        </div>
+
         <!-- segunad parte -->
         <ion-item></ion-item>
         <ion-item>
@@ -65,110 +91,146 @@
 
             </ion-select>
         </ion-item>
-
-        <div class="section row" *ngIf="conFifo">
-            <div class="col-md-6">
-                <ion-card class="alert alert-dark" *ngFor="let item of palet">
-                    <ion-card-header class="h2">
-                        <ion-card-title class="h2"> Bulto N° {{item.palets}}</ion-card-title>
-                        <ion-card-title class="h2">Ubicación: {{item.nombre}}</ion-card-title>
-                        <ion-card-title class="h2">Referencia {{item.desOpcional}}</ion-card-title>
-                    </ion-card-header>
-                    <ion-card-content>
-                    </ion-card-content>
-                </ion-card>
-            </div>
-            <!-- formulario de retiro hacia la buma,... -->
-            <div class="col-md-6">
-                <ion-card class="ion-padding">
-                    <div class="row h3">
-                        <div class="col-md-6" *ngIf="!correcta">
-                            <ion-label position="stacked">Escanea la ubicación <span class="text-info"> {{ nombreEs }}</span></ion-label>
-                            <ion-input type="number" class="form-control" id="estanteria" name="es" [(ngModel)]="es" autofocus="true" #estanterias (change)="scanEsta(estanterias.value)"></ion-input>
-                        </div>
-                        <div class="col-md-6 alert alert-info text-center" *ngIf="correcta">
-                            Ubicación correcta.
-                        </div>
-                        <div class="col-md-6 alert alert-danger text-center" *ngIf="erronea">
-                            Ubicación erronea.
-                        </div>
-                        <!-- primer escaneo -->
-                        <div class="col-md-6 alert alert-info text-center" *ngIf="correcta1">
-                            Bulto correcto.
-                        </div>
-                        <div class="col-md-6 alert alert-danger text-center" *ngIf="erronea1">
-                            Bulto erroneo.
-                        </div>
-
-                        <div class="col-md-4" *ngIf="!correcta1">
-                            <ion-label *ngIf="correcta" position="stacked">Escanea el bulto</ion-label>
-                            <ion-input *ngIf="correcta" class="form-control" type="text" id="palet" name="pa" [(ngModel)]="pa" autofocus="true" #palet (change)="scanP(palet.value)"></ion-input>
-                        </div>
-                    </div>
-                    <ion-item></ion-item>
-                    <div *ngIf="todoOk" class="alert alert-success">
-                        Operación de movimiento correcta. <br> Ya puede ubicar el bulto en la <strong>{{ nombreEs }}</strong>.
-                        <br>
-                        <ion-button *ngIf="!btn" shape="round" fill="outline" (click)="configSinAsignar()">Confirmar</ion-button>
-                        <ion-button *ngIf="btn" shape="round" fill="outline">Espere...</ion-button>
-                        <ion-button color="danger" shape="round" fill="outline" (click)="back()">Salir</ion-button>
-
-                    </div>
-
-                </ion-card>
-            </div>
+<div class="section row gap-4" *ngIf="conFifo">
+  <!-- Tarjetas de Bultos -->
+  <div class="col-md-5">
+            <ion-card class="glass-card p-3 mb-3" *ngFor="let item of palet">
+            <ion-card-header class="text-center">
+                <ion-card-title class="text-xl font-bold text-primary">BULTO Nº {{ item.palets }}</ion-card-title>
+                <ion-card-subtitle class="text-sm text-muted">Ubicación: {{ item.nombre }}</ion-card-subtitle>
+                <ion-card-subtitle class="text-sm text-muted">Referencia: {{ item.desOpcional }}</ion-card-subtitle>
+            </ion-card-header>
+            </ion-card>
         </div>
+
+  <!-- Formulario de Escaneo -->
+  <div class="col-md-6">
+    <ion-card class="p-4 rounded-2xl shadow-md border border-gray-200">
+      <div class="grid grid-cols-2 gap-4 text-sm">
+        <!-- Escanear ubicación -->
+        <div *ngIf="!correcta" class="col-span-2">
+          <ion-label class="block text-gray-700 font-medium mb-1">
+            Escanea la ubicación: <span class="text-primary font-semibold">{{ nombreEs }}</span>
+          </ion-label>
+          <ion-input
+            type="number"
+            [(ngModel)]="es"
+            #estanterias
+            (change)="scanEsta(estanterias.value)"
+            autofocus="true"
+            class="form-control border rounded px-3 py-2"
+          ></ion-input>
+        </div>
+
+        <!-- Estado de ubicación -->
+        <div class="col-span-2 text-center">
+            <div *ngIf="correcta" class="alert alert-success text-center">✔️ Ubicación correcta</div>
+            <div *ngIf="erronea" class="alert alert-danger text-center">❌ Ubicación incorrecta</div>
+        </div>
+
+        <!-- Estado del bulto -->
+        <div class="col-span-2 text-center">
+            <div *ngIf="correcta1" class="alert alert-success text-center">✔️ Palet correcto</div>
+            <div *ngIf="erronea1" class="alert alert-danger text-center">❌ Palet incorrecto</div>
+        </div>
+
+        <!-- Escanear palet -->
+        <div *ngIf="correcta && !correcta1" class="col-span-2">
+          <ion-label class="block text-gray-700 font-medium mb-1">Escanea el bulto</ion-label>
+          <ion-input
+            type="text"
+            [(ngModel)]="pa"
+            #palet
+            (change)="scanP(palet.value)"
+            autofocus="true"
+            class="form-control border rounded px-3 py-2"
+          ></ion-input>
+        </div>
+      </div>
+
+      <!-- Confirmación final -->
+      <div *ngIf="todoOk" class="mt-6 text-center bg-green-100 p-3 rounded-lg">
+         <div class="alert alert-info text-center">
+                        ✅ Movimiento confirmado.<br />
+                        Ahora puedes ubicar el palet en <strong>{{ nombreEs }}</strong>.
+                    </div>
+        <div class="flex justify-center gap-4 mt-4">
+         
+          <ion-button shape="round" fill="solid" color="success" *ngIf="!btn" (click)="configSinAsignar()">Confirmar</ion-button>
+          <ion-button shape="round" fill="outline" color="medium" *ngIf="btn" disabled>Espere...</ion-button>
+          <ion-button shape="round" fill="outline" color="danger" (click)="back()">Salir</ion-button>
+        </div>
+      </div>
+    </ion-card>
+  </div>
+</div>
 
 
         <div class="section row" *ngIf="mostraPanel">
+            <div class="col-md-5">
+            <ion-card class="glass-card p-3 mb-3" *ngFor="let item of palet">
+            <ion-card-header class="text-center">
+                <ion-card-title class="text-xl font-bold text-primary">BULTO Nº {{ item.idM }}</ion-card-title>
+                <ion-card-subtitle class="text-sm text-muted">Ubicación: {{ item.nombre }}</ion-card-subtitle>
+                <ion-card-subtitle class="text-sm text-muted">Referencia: {{ item.desOpcional }}</ion-card-subtitle>
+            </ion-card-header>
+            </ion-card>
+        </div>
+            <!-- Formulario de escaneo -->
             <div class="col-md-6">
-                <ion-card class="alert alert-dark" *ngFor="let item of palet">
-                    <ion-card-header class="h2">
-                        <ion-card-title class="h2"> Bulto N° {{item.idM}}</ion-card-title>
-                        <ion-card-title class="h2">Ubicación: {{item.nombre}}</ion-card-title>
-                        <ion-card-title class="h2">Referencia {{item.desOpcional}}</ion-card-title>
-                    </ion-card-header>
-                    <ion-card-content>
-                    </ion-card-content>
-                </ion-card>
-            </div>
-            <!-- formulario de retiro hacia la buma,... -->
-            <div class="col-md-6">
-                <ion-card class="ion-padding">
-                    <div class="row h3">
-                        <div class="col-md-6" *ngIf="!correcta">
-                            <ion-label position="stacked">Escanea la ubicación <span class="text-info"> {{ nombreEs }}</span></ion-label>
-                            <ion-input type="number" class="form-control" id="estanteria" name="es" [(ngModel)]="es" autofocus="true" #estanterias (change)="scanEsta(estanterias.value)"></ion-input>
-                        </div>
-                        <div class="col-md-6 alert alert-info text-center" *ngIf="correcta">
-                            Ubicación correcta.
-                        </div>
-                        <div class="col-md-6 alert alert-danger text-center" *ngIf="erronea">
-                            Ubicación erronea.
-                        </div>
-                        <!-- primer escaneo -->
-                        <div class="col-md-6 alert alert-info text-center" *ngIf="correcta1">
-                            Palet correcto.
-                        </div>
-                        <div class="col-md-6 alert alert-danger text-center" *ngIf="erronea1">
-                            Palet erroneo.
-                        </div>
-
-                        <div class="col-md-4" *ngIf="!correcta1">
-                            <ion-label *ngIf="correcta" position="stacked">Escanea el palet</ion-label>
-                            <ion-input *ngIf="correcta" class="form-control" type="text" id="palet" name="pa" [(ngModel)]="pa" autofocus="true" #palet (change)="scanP(palet.value)"></ion-input>
-                        </div>
-                    </div>
-                    <ion-item></ion-item>
-                    <div *ngIf="todoOk" class="alert alert-success">
-                        Operación de movimiento correcta. <br> Ya puede ubicar el palet en la <strong>{{ nombreEs }}</strong>.
-                        <br>
-                        <ion-button *ngIf="!btn" shape="round" fill="outline" (click)="configSinAsignar()">Confirmar</ion-button>
-                        <ion-button *ngIf="btn" shape="round" fill="outline">Espere...</ion-button>
-                        <ion-button color="danger" shape="round" fill="outline" (click)="back()">Salir</ion-button>
-
+                <ion-card class="glass-card p-4">
+                <div class="row gy-3">
+                    <!-- Escanear ubicación -->
+                    <div class="col-12" *ngIf="!correcta">
+                    <ion-label class="text-sm fw-medium text-gray-600">Escanea la ubicación:  {{ nombreEs }}</ion-label>
+                    <ion-input
+                        type="number"
+                        autofocus="true" 
+                        class="modern-input"
+                        [(ngModel)]="es"
+                        #estanterias
+                        (change)="scanEsta(estanterias.value)"
+                        placeholder="ID ubicación"
+                    ></ion-input>
                     </div>
 
+                    <div class="col-12">
+                    <div *ngIf="correcta" class="alert alert-success text-center">✔️ Ubicación correcta</div>
+                    <div *ngIf="erronea" class="alert alert-danger text-center">❌ Ubicación incorrecta</div>
+                    </div>
+
+                    <!-- Escanear palet -->
+                    <div class="col-12" *ngIf="correcta && !correcta1">
+                    <ion-label class="text-sm fw-medium text-gray-600">Escanea el palet:</ion-label>
+                    <ion-input
+                        type="text"
+                        autofocus="true" 
+                        class="modern-input"
+                        [(ngModel)]="pa"
+                        #palet
+                        (change)="scanP(palet.value)"
+                        placeholder="Código del palet"
+                    ></ion-input>
+                    </div>
+
+                    <div class="col-12">
+                    <div *ngIf="correcta1" class="alert alert-success text-center">✔️ Palet correcto</div>
+                    <div *ngIf="erronea1" class="alert alert-danger text-center">❌ Palet incorrecto</div>
+                    </div>
+
+                    <!-- Confirmación final -->
+                    <div class="col-12" *ngIf="todoOk">
+                    <div class="alert alert-info text-center">
+                        ✅ Movimiento confirmado.<br />
+                        Ahora puedes ubicar el palet en <strong>{{ nombreEs }}</strong>.
+                    </div>
+                    <div class="d-flex justify-content-center gap-2 mt-3">
+                        <ion-button shape="round" fill="solid" color="success" *ngIf="!btn" (click)="configSinAsignar()">Confirmar</ion-button>
+                        <ion-button shape="round" fill="outline" color="medium" *ngIf="btn" disabled>Espere...</ion-button>
+                        <ion-button shape="round" fill="outline" color="danger" (click)="back()">Salir</ion-button>
+                    </div>
+                    </div>
+                </div>
                 </ion-card>
             </div>
         </div>
@@ -178,23 +240,39 @@
     <!-- estanteria asignada -->
 
     <div class="row justify-content-md-center" *ngIf="movi && asignada == 1">
-        <div class="col-md-auto alert-primary1"> {{ nombreEs }} </div>&nbsp;&nbsp;&nbsp;
-        <div class="col-md-auto alert-primary12" (click)="back()">
-            <ion-icon name="arrow-back"></ion-icon> Atras
+          <div class="d-flex align-items-center gap-3 mb-3">
+        <div class="alert-tag text-primary fw-semibold px-3 py-2 shadow-sm rounded">
+            {{ nombreEs }}
         </div>
 
-        <div class="row animated fadeIn" *ngIf="!retirada">
-            <div class="col-md-3 " *ngFor="let item of dispo">
-                <ion-card class="alert-secondaryDispo" (click)="retirarM(item.codigoSap,item.desOpcional)">
-                    <ion-card-header class="text-center">
-                        <ion-card-title class="text-mute">{{item.desOpcional}} </ion-card-title>
-                        <ion-card-title class="text-danger" *ngIf="item.libres == 1">Disponible : {{item.libres}} </ion-card-title>
-                        <ion-card-title class="text-danger" *ngIf="item.libres > 1">Disponibles : {{item.libres}} </ion-card-title>
-                    </ion-card-header>
-                </ion-card>
-            </div>
-
+        <div class="alert-action text-white bg-primary px-3 py-2 rounded shadow-sm cursor-pointer d-flex align-items-center" (click)="back()">
+            <ion-icon name="arrow-back" class="me-2"></ion-icon>
+            Atrás
         </div>
+        </div>
+       
+
+       <div class="row animated fadeIn" *ngIf="!retirada">
+        <div class="col-md-4 mb-4" *ngFor="let item of dispo">
+            <ion-card class="dispo-card shadow-sm" (click)="retirarM(item.codigoSap, item.desOpcional)">
+            <ion-card-header class="text-center py-3">
+                <ion-card-title class="fw-semibold text-secondary fs-6">
+                {{ item.desOpcional }}
+                </ion-card-title>
+                <ion-card-title
+                [ngClass]="{
+                    'text-danger fw-bold': item.libres > 0,
+                    'text-muted': item.libres === 0
+                }"
+                class="fs-6 mt-2"
+                >
+                {{ item.libres === 1 ? 'Disponible' : 'Disponibles' }}: {{ item.libres }}
+                </ion-card-title>
+            </ion-card-header>
+            </ion-card>
+        </div>
+        </div>
+
         <div class="row animated fadeIn" *ngIf="retirada">
             <ion-item></ion-item>
             <ion-item>
@@ -207,59 +285,77 @@
                 </ion-select>
             </ion-item>
         </div>
-
-        <div class="section row" *ngIf="mostraPanel">
-            <div class="col-md-6">
-                <ion-card class="alert alert-dark" *ngFor="let item of palet">
-                    <ion-card-header class="h2">
-                        <ion-card-title class="h2"> Bulto N° {{item.idM}}</ion-card-title>
-                        <ion-card-title class="h2">Ubicación: {{item.nombre}}</ion-card-title>
-                        <ion-card-title class="h2">Referencia {{item.desOpcional}}</ion-card-title>
-                    </ion-card-header>
-                    <ion-card-content>
-                    </ion-card-content>
-                </ion-card>
-            </div>
-            <!-- formulario de retiro hacia la buma,... -->
-            <div class="col-md-6">
-                <ion-card class="ion-padding">
-                    <div class="row h3">
-                        <div class="col-md-6" *ngIf="!correcta">
-                            <ion-label position="stacked">Escanea la ubicación <span class="text-info"> {{ nombreEs }}</span></ion-label>
-                            <ion-input type="number" class="form-control" id="estanteria" name="es" [(ngModel)]="es" autofocus="true" #estanterias (change)="scanEsta(estanterias.value)"></ion-input>
-                        </div>
-                        <div class="col-md-6 alert alert-info text-center" *ngIf="correcta">
-                            Ubicación correcta.
-                        </div>
-                        <div class="col-md-6 alert alert-danger text-center" *ngIf="erronea">
-                            Ubicación erronea.
-                        </div>
-                        <!-- primer escaneo -->
-                        <div class="col-md-6 alert alert-info text-center" *ngIf="correcta1">
-                            Palet correcto.
-                        </div>
-                        <div class="col-md-6 alert alert-danger text-center" *ngIf="erronea1">
-                            Palet erroneo.
-                        </div>
-
-                        <div class="col-md-4" *ngIf="!correcta1">
-                            <ion-label *ngIf="correcta" position="stacked">Escanea el palet</ion-label>
-                            <ion-input *ngIf="correcta" class="form-control" type="text" id="palet" name="pa" [(ngModel)]="pa" autofocus="true" #palet (change)="scanP(palet.value)"></ion-input>
-                        </div>
-                    </div>
-                    <ion-item></ion-item>
-                    <div *ngIf="todoOk" class="alert alert-success">
-                        Operación de movimiento correcta. <br> Ya puede ubicar el palet en la <strong>{{ nombreEs }}</strong>.
-                        <br>
-                        <ion-button *ngIf="!btn" shape="round" fill="outline" (click)="configAsignar()">Confirmar</ion-button>
-                        <ion-button *ngIf="btn" shape="round" fill="outline">Espere...</ion-button>
-                        <ion-button color="danger" shape="round" fill="outline" (click)="back()">Salir</ion-button>
-
-                    </div>
-
-                </ion-card>
-            </div>
+        <div class="section row gap-4 justify-content-center" *ngIf="mostraPanel">
+        <!-- Información del palet -->
+        <div class="col-md-5">
+            <ion-card class="glass-card p-3 mb-3" *ngFor="let item of palet">
+            <ion-card-header class="text-center">
+                <ion-card-title class="text-xl font-bold text-primary">BULTO Nº {{ item.idM }}</ion-card-title>
+                <ion-card-subtitle class="text-sm text-muted">Ubicación: {{ item.nombre }}</ion-card-subtitle>
+                <ion-card-subtitle class="text-sm text-muted">Referencia: {{ item.desOpcional }}</ion-card-subtitle>
+            </ion-card-header>
+            </ion-card>
         </div>
+
+  <!-- Formulario de escaneo -->
+  <div class="col-md-6">
+    <ion-card class="glass-card p-4">
+      <div class="row gy-3">
+        <!-- Escanear ubicación -->
+        <div class="col-12" *ngIf="!correcta">
+          <ion-label class="text-sm fw-medium text-gray-600">Escanea la ubicación:  {{ nombreEs }}</ion-label>
+          <ion-input
+            type="number"
+            autofocus="true" 
+            class="modern-input"
+            [(ngModel)]="es"
+            #estanterias
+            (change)="scanEsta(estanterias.value)"
+            placeholder="ID ubicación"
+          ></ion-input>
+        </div>
+
+        <div class="col-12">
+          <div *ngIf="correcta" class="alert alert-success text-center">✔️ Ubicación correcta</div>
+          <div *ngIf="erronea" class="alert alert-danger text-center">❌ Ubicación incorrecta</div>
+        </div>
+
+        <!-- Escanear palet -->
+        <div class="col-12" *ngIf="correcta && !correcta1">
+          <ion-label class="text-sm fw-medium text-gray-600">Escanea el palet:</ion-label>
+          <ion-input
+            type="text"
+            autofocus="true" 
+            class="modern-input"
+            [(ngModel)]="pa"
+            #palet
+            (change)="scanP(palet.value)"
+            placeholder="Código del palet"
+          ></ion-input>
+        </div>
+
+        <div class="col-12">
+          <div *ngIf="correcta1" class="alert alert-success text-center">✔️ Palet correcto</div>
+          <div *ngIf="erronea1" class="alert alert-danger text-center">❌ Palet incorrecto</div>
+        </div>
+
+        <!-- Confirmación final -->
+        <div class="col-12" *ngIf="todoOk">
+          <div class="alert alert-info text-center">
+            ✅ Movimiento confirmado.<br />
+            Ahora puedes ubicar el palet en <strong>{{ nombreEs }}</strong>.
+          </div>
+          <div class="d-flex justify-content-center gap-2 mt-3">
+            <ion-button shape="round" fill="solid" color="success" *ngIf="!btn" (click)="configAsignar()">Confirmar</ion-button>
+            <ion-button shape="round" fill="outline" color="medium" *ngIf="btn" disabled>Espere...</ion-button>
+            <ion-button shape="round" fill="outline" color="danger" (click)="back()">Salir</ion-button>
+          </div>
+        </div>
+      </div>
+    </ion-card>
+  </div>
+</div>
+
     </div>
 
 </ion-content>

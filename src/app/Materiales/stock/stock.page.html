@@ -1,57 +1,75 @@
-<ion-header>
-    <ion-toolbar>
-        <ion-buttons slot="start">
-            <!-- boton del menu que se encuentra en app-component -->
-            <ion-menu-button autoHide="false"></ion-menu-button>
-            <ion-back-button defaultHref="/material/{{idMaterial}}"></ion-back-button>
-
-        </ion-buttons>
-        <ion-title class="text-center text-primary text-uppercase">{{datas}}: Stock</ion-title>
-    </ion-toolbar>
+<ion-header class="modern-header">
+  <ion-toolbar color="light">
+    <ion-buttons slot="start">
+      <ion-menu-button autoHide="false"></ion-menu-button>
+      <ion-back-button defaultHref="/material/{{ idMaterial }}"></ion-back-button>
+    </ion-buttons>
+    <ion-title class="modern-title">{{ datas }}: Stock</ion-title>
+  </ion-toolbar>
 </ion-header>
 
+<ion-content class="modern-content">
+  <ion-grid>
+    <ion-row>
+      <!-- Lista lateral -->
+     <ion-col size="4" class="scroll-col">
+  <ion-list class="shadow rounded">
+    <ion-item
+      *ngFor="let item of data; let i = index"
+      (click)="detalle(item.codigoSap, i)"
+      [ngClass]="{ 'active': i == fila }"
+      lines="none"
+    >
+      <ion-label class="fw-bold text-md">{{ item.desOpcional }}</ion-label>
+      <ion-note slot="end" color="primary" class="fw-semibold">
+        {{ item.stockReal1 }}
+      </ion-note>
+    </ion-item>
+  </ion-list>
+</ion-col>
+      <!-- Espacio intermedio -->
+      <ion-col size="1"></ion-col>
+<ion-col size="5" *ngIf="verDetalle && !loader" class="scroll-col">
+  <div class="glass-card">
+    <div class="alert alert-dark text-center">{{ desOpcional }}</div>
+    <ion-list>
+      <ion-item *ngFor="let item of detalleMaterial">
+        <ion-label>{{ item.nombre }}</ion-label>
+        <ion-item-option
+          color="danger"
+          expandable
+          *ngIf="item.mitad == 1"
+        >
+          &nbsp; Mitad &nbsp;
+        </ion-item-option>
+        <ion-item-option
+          color="success"
+          expandable
+          *ngIf="item.mitad == 0"
+        >
+          Entero
+        </ion-item-option>
+        <ion-note slot="end" class="h6"># {{ item.idM }}</ion-note>
+      </ion-item>
+    </ion-list>
+    <ion-button expand="block" fill="outline" (click)="borrarDetalle()">
+      Borrar detalle
+    </ion-button>
+  </div>
+</ion-col>
 
-<ion-content>
-    <ion-grid>
-        <ion-row>
-            <ion-col size="4">
-                <ion-list mode="ios" class="cli">
-                    <ion-item *ngFor="let item of data ; let i = index" (click)="detalle(item.codigoSap,i)" [ngClass]="{'active': i == fila}">
-                        <ion-label>{{item.desOpcional}}</ion-label>
-                        <ion-note slot="end" class="h6">{{item.stockReal1}}</ion-note>
-                    </ion-item>
-                </ion-list>
-            </ion-col>
-            <ion-col size="3">
 
-            </ion-col>
-            <ion-col size="5" *ngIf="verDetalle && !loader">
-                <div class="my-fixed-item">
 
-                    <div class="alert alert-dark text-center">
-                        {{ desOpcional }}
-                    </div>
-                    <ion-list>
-                        <ion-item *ngFor="let item of detalleMaterial">
-                            <ion-label>{{item.nombre}} </ion-label>
-                            <ion-item-option color="danger" expandable *ngIf="item.mitad== 1">
-                                &nbsp; Mitad &nbsp;
-                            </ion-item-option>
-                            <ion-item-option color="success" expandable *ngIf="item.mitad== 0">
-                                Entero
-                            </ion-item-option>
-                            <ion-note slot="end" class="h6"># {{item.idM}}</ion-note>
-                        </ion-item>
-                    </ion-list>
-                    <ion-button expand="block" fill="outline" (click)="borrarDetalle()">Borrar detalle</ion-button>
-                </div>
-            </ion-col>
-            <ion-col size="5" *ngIf="loader">
-                <div class="my-fixed-item top">
-                    <ion-progress-bar mode="ios" type="indeterminate" reversed="true"></ion-progress-bar>
-                    <span class="text-center text-primary"> Cargando información...</span>
-                </div>
-            </ion-col>
-        </ion-row>
-    </ion-grid>
+      
+      
+
+      <!-- Loader -->
+     <ion-col size="5" *ngIf="loader">
+    <div class="loader-card">
+        <ion-spinner name="crescent" color="primary" class="loader-icon"></ion-spinner>
+        <p class="loader-text">Cargando información, por favor espera...</p>
+    </div>
+    </ion-col>
+    </ion-row>
+  </ion-grid>
 </ion-content>

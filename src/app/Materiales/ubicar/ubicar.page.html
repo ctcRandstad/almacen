@@ -12,131 +12,173 @@
 
 
 <ion-content class="ion-padding">
+<ion-row *ngIf="!confirmar" class="justify-content-center mt-4">
+  <ion-col size="12" size-md="8" size-lg="5">
+    <div class="custom-card">
+      <div class="custom-card-header">
+        <h2 class="custom-title">¿Imprimir etiquetas?</h2>
+        <p class="custom-subtitle">Se generarán automáticamente las etiquetas correspondientes.</p>
+      </div>
 
+      <div class="custom-card-actions-inline">
+        <ion-button class="btn-confirm" shape="round" (click)="si()">
+          <ion-icon name="print" slot="start"></ion-icon> Imprimir
+        </ion-button>
 
-
-    <ion-row *ngIf="!confirmar">
-
-        <ion-col>
-            <ion-card>
-
-                <ion-card-content class="h3 text-center">
-                    ¿Quieres <strong>Imprimir </strong> las etiquetas correspondientes. ?
-                </ion-card-content>
-                <ion-card-header>
-
-                    <ion-card-title class="text-center">
-                        <ion-button size="large" color="primary" (click)="si()">
-                            <ion-icon name="happy"></ion-icon> SI</ion-button>
-                        &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;
-                        <ion-button size="large" color="danger" (click)="no()">
-                            <ion-icon name="alert"></ion-icon> NO</ion-button>
-                    </ion-card-title>
-                </ion-card-header>
-            </ion-card>
-        </ion-col>
-    </ion-row>
-
-
-    <div class="row" *ngIf="!individual && !sinEntrada && !printer">
-        <div class="col-md-6" *ngFor="let item of data" (click)="onClick(item)">
-            <ion-card>
-                <ion-card-header>
-                    <ion-card-title>{{item.desOpcional}} ---- Etiqueta N° {{item.idM}}</ion-card-title>
-
-                </ion-card-header>
-
-                <ion-card-content class="text-danger">
-                    Cantidad: {{ item.cantidadE }} &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;
-                    <span class="text-primary"> Código SAP {{ item.codigoSap}}</span>
-                </ion-card-content>
-            </ion-card>
-        </div>
+        <ion-button class="btn-cancel" shape="round" fill="outline" (click)="no()">
+          <ion-icon name="close-circle" slot="start"></ion-icon> Cancelar
+        </ion-button>
+      </div>
     </div>
-    <div class="alert alert-primary text-center h3" *ngIf="sinEntrada">
-        Por el momento no hay {{datas}} para ubicar!!!
+  </ion-col>
+</ion-row>
+
+
+
+
+
+<div class="row" *ngIf="!individual && !sinEntrada && !printer">
+  <div class="col-md-6 mb-3" *ngFor="let item of data" (click)="onClick(item)">
+    <ion-card class="shadow-sm rounded-3 border border-0 bg-white" style="cursor: pointer;">
+      <ion-card-header class="bg-white border-bottom pb-2">
+        <div class="d-flex justify-content-between align-items-center">
+          <h6 class="mb-0 text-dark">{{ item.desOpcional }}</h6>
+          <span class="badge bg-primary text-light">#{{ item.idM }}</span>
+        </div>
+      </ion-card-header>
+      <ion-card-content class="py-2 px-3">
+        <div class="d-flex align-items-center mb-2">
+          <ion-icon name="cube-outline" class="me-2 text-danger"></ion-icon>
+          <span class="fw-medium">Cantidad:</span>
+          <span class="ms-auto text-danger fw-bold">{{ item.cantidadE }}</span>
+        </div>
+        <div class="d-flex align-items-center">
+          <ion-icon name="pricetag-outline" class="me-2 text-primary"></ion-icon>
+          <span class="fw-medium">Código SAP:</span>
+          <span class="ms-auto text-primary fw-semibold">{{ item.codigoSap }}</span>
+        </div>
+      </ion-card-content>
+    </ion-card>
+  </div>
+</div>
+
+<div class="alert alert-primary text-center h5 mt-4" *ngIf="sinEntrada">
+  Por el momento no hay <strong>{{ datas }}</strong> para ubicar.
+</div>
+
+
+
+
+
+    <!--  individual  -->
+    <!--  individual  -->
+    <!--  individual  -->
+    <!--  individual  -->
+   <div class="row g-4" *ngIf="individual">
+
+  <!-- Columna de datos del bulto -->
+  <div class="col-md-6">
+    <ion-card class="shadow rounded-lg">
+      <ion-card-header>
+        <ion-card-title class="text-xl font-bold">{{ datos.desOpcional }}</ion-card-title>
+        <ion-card-subtitle class="text-primary fw-bold">Etiqueta N°: #{{ datos.idM }}</ion-card-subtitle>
+        <p class="text-danger fw-semibold mt-2">Bulto: 1</p>
+      </ion-card-header>
+
+      <ion-card-content>
+        <form #action="ngForm" novalidate>
+
+          <!-- Input de ubicación -->
+          <div class="mb-3">
+            <ion-input
+              *ngIf="!bienE"
+              fill="outline"
+              label="Ubicación"
+              labelPlacement="floating"
+              type="text"
+              autofocus
+              [(ngModel)]="ubi"
+              name="estanteria"
+              (change)="scan(ubi)">
+            </ion-input>
+            <small *ngIf="!bienE" class="text-info d-block mt-2">Escanea la ubicación</small>
+          </div>
+
+          <!-- Hidden fields -->
+          <input type="hidden" name="codigoSap" [(ngModel)]="datos.codigoSap">
+          <input type="hidden" name="idM" [(ngModel)]="datos.idM">
+          <input type="hidden" name="idMaterial" [(ngModel)]="idMaterial">
+          <input type="hidden" name="idEstanteria" [(ngModel)]="idEstanteria">
+
+          <!-- Botones de acción -->
+          <ion-button *ngIf="!errorU"
+            type="submit"
+            expand="block"
+            color="primary"
+            fill="solid"
+            size="large"
+            [disabled]="action.invalid || processing || boton" 
+            (click)="ubicar(action)">
+            <ion-icon slot="start" name="checkbox-outline"></ion-icon>
+            Ubicar
+          </ion-button>
+
+          <ion-button
+            *ngIf="boton"
+            expand="block"
+            color="success"
+            fill="outline"
+            size="large"
+            disabled>
+            <ion-spinner name="crescent" slot="start"></ion-spinner>
+            Ubicando...
+          </ion-button>
+
+        </form>
+      </ion-card-content>
+    </ion-card>
+  </div>
+
+  <!-- Columna de ubicaciones -->
+  <div class="col-md-6">
+    <div *ngFor="let item of estanteriasDatas">
+      <ion-card *ngIf="item.libres > 0" class="mb-3">
+        <ion-item-divider class="bg-light">
+          <ion-label>
+            <h5 class="text-primary text-center mb-2">{{ item.nombre }}</h5>
+            <p class="text-info text-center mb-0">
+              {{ item.libres === 1 ? 'Disponible: 1' : 'Disponibles: ' + item.libres }}
+            </p>
+          </ion-label>
+        </ion-item-divider>
+      </ion-card>
     </div>
 
-
-
-
-    <!--  individual  -->
-    <!--  individual  -->
-    <!--  individual  -->
-    <!--  individual  -->
-    <div class="row " *ngIf="individual">
-        <div class="col-md-6 h1">
-            <ion-card class="h1">
-                <ion-card-header>
-                    <ion-card-title class="h1">{{ datos.desOpcional}}</ion-card-title>
-                    <ion-card-subtitle class="text-primary h1">Número de etiqueta: #{{ datos.idM }}</ion-card-subtitle>
-                    <span class="text-danger">Bulto: 1</span>
-
-                </ion-card-header>
-                <ion-card-content>
-                    <form #action="ngForm">
-
-
-                        <div class="row">
-                            <div class="col-md-6">
-                                <ion-input *ngIf="!bienE" class="form-control" required type="text" id="esta" autofocus="true" #esta name="estanteria" (change)="scan( esta.value)" [(ngModel)]="ubi"></ion-input>
-                            </div>
-                            <div class="col-md-6 he">
-                                <span *ngIf="!bienE" class="alert alert-info text-center">Escanea la ubicación</span>
-                            </div>
-                        </div>
-                        <input type="hidden" name="codigoSap" [(ngModel)]="datos.codigoSap">
-                        <input type="hidden" name="idM" [(ngModel)]="datos.idM">
-                        <input type="hidden" name="idMaterial" [(ngModel)]="idMaterial">
-                        <input type="hidden" name="idEstanteria" [(ngModel)]="idEstanteria">
-
-
-                        <ion-button (click)="ubicar(action)" [disabled]="action.invalid" class="text-white" *ngIf="!errorU && !boton" color="primary" expand="full" fill="outline" size="large">
-                            <ion-icon name="checkbox-outline"></ion-icon>
-                            Ubicar</ion-button>
-                        <ion-button class="text-white" *ngIf="boton" color="success" expand="full" fill="outline" size="large">
-                            <ion-spinner name="crescent"></ion-spinner>
-                            Ubicando ....</ion-button>
-
-                    </form>
-                </ion-card-content>
-
-                <!-- <ion-fab-button (click)="onClick1()">
-        <ion-icon name="undo"></ion-icon>
-    </ion-fab-button> -->
-
-            </ion-card>
-        </div>
-        <div class="col-md-6 h1">
-            <ion-card class="col-md-12" *ngFor="let item of estanteriasDatas">
-                <ion-item-divider class="h3 active" *ngIf="item.libres > 0">
-                    <ion-label>
-                        <span class="text-primary text-center">    <br>{{ item.nombre}} </span>
-                        <br>
-
-                        <span class="text-info" *ngIf="item.libres == 1"> Disponible: {{ item.libres}} </span>
-                        <span class="text-info" *ngIf="item.libres > 1"> Disponibles: {{ item.libres}} </span>
-
-
-                    </ion-label>
-                </ion-item-divider>
-            </ion-card>
-
-            <div class="alert alert-danger" *ngIf="errorU">
-                Error en la ubicación.
-            </div>
-
-            <div *ngIf="nomUbi" class="alert alert-info text-center">
-                {{ nomUbi }}
-            </div>
-        </div>
+    <!-- Mensajes -->
+    <div class="alert alert-danger mt-3 text-center" *ngIf="errorU">
+      ❌ Error en la ubicación.
     </div>
 
-    <ion-refresher  slot="fixed" (ionRefresh)="doRefresh($event)">
-        <ion-refresher-content pullingIcon="chevron-down-circle-outline"
-        pullingText="Pull to refresh"
-        refreshingSpinner="circles"
-        refreshingText="Refrescando la página..."></ion-refresher-content>
-      </ion-refresher>
+    <div *ngIf="nomUbi" class="alert alert-info mt-3 text-center">
+      📦 Ubicación escaneada: {{ nomUbi }}
+    </div>
+  </div>
+
+</div>
+
+<ion-refresher
+  slot="fixed"
+  (ionRefresh)="doRefresh($event)"
+  class="custom-refresher"
+>
+  <ion-refresher-content
+    pullingIcon="chevron-down-circle-outline"
+    pullingText="🔄 Desliza para actualizar"
+    refreshingSpinner="circles"
+    refreshingText="✨ Actualizando datos..."
+  ></ion-refresher-content>
+</ion-refresher>
+
+
 
 </ion-content>

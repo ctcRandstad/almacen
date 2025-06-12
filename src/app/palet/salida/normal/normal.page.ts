@@ -223,6 +223,8 @@ pilas:boolean=false;
   getUbicaciones(){
     this._ped.getUbicaciones()
     .subscribe(data=>{
+      console.log(data);
+      
       this.data = data;   
     })
   }

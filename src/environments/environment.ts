@@ -4,9 +4,9 @@
 
 export const environment = {
   production: false,
-  url: 'https://lecta.grupoctc.com/ctcpackApi/controllers/'
+  // url: 'https://lecta.grupoctc.com/ctcpackApi/controllers/'
 
-  // url: 'http://192.168.88.102/CTC/ctcpackApi/controllers/'
+  url: 'http://localhost/ctcpackApi/controllers/'
 };
 
 /*

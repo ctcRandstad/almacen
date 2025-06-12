@@ -1,47 +1,88 @@
-ion-item-option {
-    border-radius: 5px;
+.modern-header {
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
 }
 
-.active {
-   border: 1px solid hsl(300, 100%, 54%)!important;
-    text-align: center;
+.modern-title {
+  font-weight: 700;
+  font-size: 1.1rem;
+  letter-spacing: 1px;
+  color: #3b82f6;
+  text-align: center;
+  text-transform: uppercase;
 }
 
-.my-fixed-item {
-    position: fixed;
-    width: 500px;
-    height: 550px;
-    overflow-x: auto;
+.modern-content {
+  background: linear-gradient(to bottom right, #f8fafc, #eef2ff);
 }
 
-.cli {
-    height: 700px;
-    overflow-x: auto;
+.glass-card {
+  background: rgba(255, 255, 255, 0.8);
+  border-radius: 16px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+  backdrop-filter: blur(8px);
 }
 
- ::-webkit-scrollbar {
-    -webkit-appearance: none;
+ion-item.active {
+  background-color: #e0f2fe;
+  border-left: 4px solid #3b82f6;
 }
 
- ::-webkit-scrollbar:vertical {
-    width: 11px;
+ion-badge {
+  font-size: 0.75rem;
+  font-weight: 600;
+}
+.loader-card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 220px;
+  background: linear-gradient(to bottom right, #ffffff, #f1f5f9);
+  border-radius: 16px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
+  padding: 1.5rem;
+  animation: fadeIn 0.6s ease-in-out;
 }
 
- ::-webkit-scrollbar:horizontal {
-    height: 11px;
+.loader-icon {
+  font-size: 3rem;
+  margin-bottom: 1rem;
 }
 
- ::-webkit-scrollbar-thumb {
-    border-radius: 8px;
-    border: 2px solid white;
-    background-color: rgba(0, 0, 0, .5);
+.loader-text {
+  color: #3b82f6;
+  font-weight: 600;
+  font-size: 1rem;
+  text-align: center;
+  animation: pulse 1.8s infinite ease-in-out;
 }
 
- ::-webkit-scrollbar-track {
-    background-color: #fff;
-    border-radius: 8px;
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
-.top {
-    margin-top: 100px;
+@keyframes pulse {
+  0%,
+  100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.6;
+  }
+}
+.scroll-col {
+  max-height: calc(100vh - 100px); // Ajusta según el header
+  overflow-y: auto;
+  padding-right: 0.5rem;
+}
+.scroll-detail {
+  max-height: calc(100vh - 100px);
+  overflow-y: auto;
 }

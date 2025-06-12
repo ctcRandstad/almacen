@@ -1,0 +1,68 @@
+.custom-refresher {
+  background: linear-gradient(135deg, #f8fafc, #eef2ff);
+  border-bottom: 1px solid #e5e7eb;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+  z-index: 10;
+}
+
+ion-refresher-content {
+  color: #4f46e5;
+  font-weight: 600;
+  font-size: 1rem;
+  letter-spacing: 0.5px;
+  text-shadow: 0 1px 1px rgba(0, 0, 0, 0.05);
+}
+
+.custom-card {
+  background: #fff;
+  border-radius: 1rem;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+  padding: 2rem;
+  transition: all 0.3s ease-in-out;
+}
+
+.custom-card-header {
+  text-align: center;
+  margin-bottom: 1.5rem;
+}
+
+.custom-title {
+  font-size: 1.5rem;
+  font-weight: 600;
+  color: #1f2937;
+  margin-bottom: 0.5rem;
+}
+
+.custom-subtitle {
+  font-size: 0.95rem;
+  color: #6b7280;
+}
+
+.custom-card-actions-inline {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 1rem;
+  flex-wrap: nowrap;
+
+  @media (max-width: 480px) {
+    flex-wrap: wrap;
+  }
+}
+
+.btn-confirm {
+  --background: linear-gradient(to right, #4f46e5, #3b82f6);
+  --color: #fff;
+  --box-shadow: 0 4px 14px rgba(59, 130, 246, 0.4);
+  font-weight: 500;
+  padding: 0.75rem 1.5rem;
+  border-radius: 9999px;
+}
+
+.btn-cancel {
+  --color: #6b7280;
+  --border-color: #d1d5db;
+  font-weight: 500;
+  padding: 0.75rem 1.5rem;
+  border-radius: 9999px;
+}

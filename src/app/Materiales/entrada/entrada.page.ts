@@ -85,20 +85,36 @@ this.fecha = f.getFullYear() + "-" + (f.getMonth() +1) + "-" + f.getDate();
       })
   }
 
-palet!:number;
-cantPaletCajas(idDetalle:any ,palet:any){
-  // console.log(palet.value);
-  this._varios.modeficaPalet(idDetalle, palet.value, this.idMaterial)
-  .subscribe(resp=>{
-   if (resp == 'success') {
-     this.toast.presentLoadimensajeng('Cambio en la cantidad de bultos,  se imprimirá ' + palet.value + ' etiquetas' )
-   } else {
-     alert('Error.');
-     this.hide();
-   }
-    
-  })
+
+palet!: number;
+cantPaletCajas(idDetalle: any, palet: any) {
+  const cantidad = parseInt(palet.value, 10);
+
+  if (isNaN(cantidad) || cantidad < 0) {
+    this.toast.presentLoadimensajeng('Cantidad inválida.');
+    return;
+  }
+
+  this._varios.modeficaPalet(idDetalle, cantidad, this.idMaterial)
+    .subscribe({
+      next: (resp: any) => {
+        if (resp.status === 'success') {
+          this.toast.presentLoadimensajeng(`Cambio realizado: se imprimirán ${cantidad} etiquetas`);
+        } else {
+          this.toast.presentLoadimensajeng('Hubo un problema al guardar los cambios.');
+          this.hide();
+        }
+      },
+      error: (err) => {
+        console.error('Error en la solicitud:', err);
+        this.toast.presentLoadimensajeng('Error del servidor.');
+        this.hide();
+      }
+    });
 }
+
+
+
   m:boolean=false;
   boton:boolean=false;
   pRealizado:any= [];
@@ -142,77 +158,108 @@ cantPaletCajas(idDetalle:any ,palet:any){
   
   }
 
-btnTabs!:boolean;
- async validadL(descripcion:any, cantidad:any, cantidadM:any,idPedido:any , codigoSap:any,idDetalle:any,palet:any,idProveedor:any, stockF:any ){
-   
+btnTabs!: boolean;
+
+async validadL(
+  descripcion: any,
+  cantidad: any,
+  cantidadM: any,
+  idPedido: any,
+  codigoSap: any,
+  idDetalle: any,
+  palet: any,
+  idProveedor: any,
+  stockF: any
+) {
   this.btnTabs = true;
-     const alert = await this.alertController.create({
-       header: 'Validar linea!',
-       message: '¿Estas <strong class="text-success">seguro  de validar ' + descripcion + ' '  + codigoSap +  '  </strong> ?',
-       buttons: [
-         {
-           text: 'Cancelar',
-           role: 'cancel',
-           cssClass: 'btn-danger',
-           handler: () => {
-            this.btnTabs = false;
-             return;
-           }
-         }, {
-           text: 'Validar',
-           cssClass: 'btn-success',
-           handler: () => {
-            const msj = 'Validando referencia...'
-            this.toast.presentLoadimensajeng(msj);
-            
-           //  acepto los validación
-           let con=     this._varios.validarEntrada(idDetalle,cantidad,  cantidadM, codigoSap, idPedido, palet,this.idMaterial ,idProveedor , stockF)
-          .subscribe(re=>{
-            // console.log(re);
-            if (re == 'success') {
-              this.btnTabs = false;
-             this.verPedido(idPedido, this.razonSocial);
-            }
-          })
-          }
-         }
-       ]
-     });
-    //  this.btnTabs = false;
-     await alert.present();
- }
+
+  const alert = await this.alertController.create({
+    header: 'Validar línea',
+    mode: 'ios',
+    message: `⚠️ ¿ESTÁS SEGURO de modificar "${descripcion}" con código ${codigoSap}?`,
+    buttons: [
+      {
+        text: 'Cancelar',
+        role: 'cancel',
+        cssClass: 'btn-danger',
+        handler: () => {
+          this.btnTabs = false;
+        }
+      },
+      {
+        text: 'Validar',
+        cssClass: 'btn-success',
+        handler: () => {
+          this.toast.presentLoadimensajeng('Validando referencia...');
+
+          this._varios
+            .validarEntrada(idDetalle, cantidad, cantidadM, codigoSap, idPedido, palet, this.idMaterial, idProveedor, stockF)
+            .subscribe({
+              next: (res: any) => {
+                this.btnTabs = false;
+
+                if (res.status === 'success') {
+                  this.toast.presentLoadimensajeng('Referencia validada con éxito');
+                  this.verPedido(idPedido, this.razonSocial);
+                } else {
+                  this.toast.presentLoadimensajeng('No se pudo validar la línea.');
+                }
+              },
+              error: (err) => {
+                console.error('Error en la validación', err);
+                this.toast.presentLoadimensajeng('Error del servidor');
+                this.btnTabs = false;
+              }
+            });
+        }
+      }
+    ]
+  });
+
+  await alert.present();
+}
+
 
  alertaAlert(con:any){
   alert(con)
  }
 
+modi: boolean = false;
 
-   modi:boolean=false; 
- async modificarC(descripcion:any, cantidad:any, cantidadM:any,idPedido:any , codigoSap:any,idDetalle:any){
-  // console.log(this.comentario);
-    const alert = await this.alertController.create({
-      header: 'Modificar linea!',
-      message: '¿Estas <strong class="text-danger">seguro  de modificar ' + descripcion + ' '  + codigoSap +  ' </strong> ?',
-      buttons: [
-        {
-          text: 'Cancelar',
-          role: 'cancel',
-          cssClass: 'btn-danger',
-          handler: () => {
-            this.modi = false;
-            return;
-          }
-        }, {
-          text: 'Modificar',
-          cssClass: 'btn-success',
-          handler: () => {
-          //  acepto los eliminación
+async modificarC(
+  descripcion: string,
+  cantidad: number,
+  cantidadM: number,
+  idPedido: number,
+  codigoSap: string,
+  idDetalle: number
+): Promise<void> {
+
+  const alert = await this.alertController.create({
+    header: 'Modificar línea',
+    mode: 'ios',
+    cssClass: 'custom-alert',
+    message: `⚠️ ¿ESTÁS SEGURO de modificar "${descripcion}" con código ${codigoSap}?`,
+    buttons: [
+      {
+        text: 'Cancelar',
+        role: 'cancel',
+        cssClass: 'text-danger',
+        handler: () => {
+          this.modi = false;
+        }
+      },
+      {
+        text: 'Modificar',
+        cssClass: 'text-success',
+        handler: () => {
           this.modi = true;
-          this.modificarCantidadCajas(idDetalle,cantidad,  cantidadM, codigoSap, idPedido);
+          this.modificarCantidadCajas(idDetalle, cantidad, cantidadM, codigoSap, idPedido);
         }
       }
     ]
   });
+
   await alert.present();
 }
 
@@ -220,17 +267,17 @@ btnTabs!:boolean;
 
 
 codigoSap:any;
-
-
-async modificarCantidadCajas(idDetalle:any,cantidad:any,  cantidadM:any, codigoSap:any, idPedido:any) {
+async modificarCantidadCajas(idDetalle: any, cantidad: any, cantidadM: any, codigoSap: any, idPedido: any) {
   const alert = await this.alertController.create({
-    header: 'Nueva Cantidad!',
+    header: 'Nueva Cantidad',
+    mode: 'ios',
+    cssClass: 'custom-alert',
     inputs: [
       {
         name: 'cant',
         type: 'number',
-        placeholder: 'Cantidad entregada ',
-      },
+        placeholder: 'Cantidad entregada',
+      }
     ],
     buttons: [
       {
@@ -238,22 +285,30 @@ async modificarCantidadCajas(idDetalle:any,cantidad:any,  cantidadM:any, codigoS
         role: 'cancel',
         cssClass: 'secondary',
         handler: () => {
-          console.log('Confirm Cancel');
+          console.log('Cancelado');
         }
-      }, {
+      },
+      {
         text: 'Aceptar',
-        handler: data => {
-
-          if (data.cant < 0) {
-            this.alerta();
-          } else {
-            this._varios.modificarEntrada(idDetalle,data.cant,this.idMaterial)
-           .subscribe(res=>{
-            this.verPedido(idPedido,this.razonSocial)
-           })
-            
-          }
+        handler: (data) => {
+          const nuevaCantidad = Number(data.cant);
           
+          if (!data.cant || isNaN(nuevaCantidad) || nuevaCantidad < 0) {
+            this.alerta(); // Asegúrate de tener un método `alerta()` para mostrar error
+            return false; // Evita cerrar el modal si hay error
+          }
+
+          this._varios.modificarEntrada(idDetalle, nuevaCantidad, this.idMaterial)
+            .subscribe(res => {
+             if (res.status === 'success') {
+              this.toast.presentLoadimensajeng(res.message);
+              this.verPedido(idPedido, this.razonSocial);
+            } else {
+              this.toast.presentLoadimensajeng(res.message);
+            }
+            });
+
+          return true; // Cierra el alert correctamente
         }
       }
     ]
@@ -274,26 +329,35 @@ volver(){
 
 
 
-aceptar(idPedido:number){
-  this._varios.getValidadosById(idPedido,this.idMaterial)
-  .subscribe(res=>{
-     if (res >= 1 ) {
-       alert('Falta confirmar campos..');
-     }else{
-       const msj = 'Confirmando albarán....'
-      this.toast.presentLoadimensajeng(msj);
-      this._varios.confirmarAlbaranApp(idPedido, this.idMaterial)
-      .subscribe(res=>{
-        if (res == 'success') {
-          this.ruta.navigate(['ubicarM' , this.idMaterial]);
-        }else{
-          alert('no se ha podido confirmar');
-        }
-      })
-     }
-  })
-  
+aceptar(idPedido: number): void {
+  this._varios.getValidadosById(idPedido, this.idMaterial).subscribe({
+    next: (res: number) => {
+      if (res >= 1) {
+        alert('⚠️ Aún hay líneas sin confirmar.');
+      } else {
+        const mensaje = 'Confirmando albarán...';
+        this.toast.presentLoadimensajeng(mensaje);
+
+        this._varios.confirmarAlbaranApp(idPedido, this.idMaterial).subscribe({
+          next: (res: any) => {
+            if (res === 'success') {
+              this.ruta.navigate(['ubicarM', this.idMaterial]);
+            } else {
+              alert('❌ No se ha podido confirmar el albarán.');
+            }
+          },
+          error: () => {
+            alert('❌ Error en el servidor al confirmar albarán.');
+          }
+        });
+      }
+    },
+    error: () => {
+      alert('❌ Error al verificar líneas validadas.');
+    }
+  });
 }
+
 
 
 doRefresh(event:any) {

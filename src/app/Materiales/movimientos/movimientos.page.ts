@@ -148,6 +148,7 @@ dataNueva!:any[];
   
     this._material.materialesMover(event.target.value , this.fifo, this.estan, this.idMaterial)
     .subscribe(data=>{ 
+    console.log(data);
     
    this.palet=data;
    if (this.fifo == 1) {
@@ -202,7 +203,7 @@ scanEsta(idEstanteria:any){
     this.erronea = false;
     setTimeout(() => {
     this.pInput.setFocus();
-  }, 500);
+  }, 1000);
   setTimeout(() => {
   //  this.keyboard.hide();
   Keyboard.hide();
@@ -329,29 +330,40 @@ materialMaquina(sap:any){
 }
 
 
-configAsignar(){
+configAsignar() {
+  if (this.btn) return; // previene múltiples toques
   this.btn = true;
+
   this.asignadaDestino = this.asignada;
   this.idPaletEtiqueta = this.idPalet;
   this.estanteriaDestino = this.idEstanteria;
-  
-  
-  let con= this._material.movimientoMAsignada(this.asignadaOrigen,this.sap,this.idMaterial,this.idPaletEtiqueta,this.estanteriaDestino,this.estanteriaOrigen)
-  .subscribe(data=>{ 
-    if (data == 'success') {
-      this.toast.presentLoadimensajeng('Moviendo bulto. Espere por favor');
-      this.back();
-    }   
+
+  this.toast.presentLoadimensajeng('Moviendo bulto. Espere...');
+
+  this._material.movimientoMAsignada(
+    this.asignadaOrigen,
+    this.sap,
+    this.idMaterial,
+    this.idPaletEtiqueta,
+    this.estanteriaDestino,
+    this.estanteriaOrigen
+  ).subscribe({
+    next: (data) => {
+      console.log(data);
+      
+      if (data === 'success') {
+        this.toast.presentLoadimensajeng('Movimiento realizado con éxito');
+        this.back();
+      } else {
+        alert('No se pudo mover el bulto. Intenta de nuevo.');
+        this.btn = false;
+      }
+    },
+    error: () => {
+      alert('Error al mover. Verifica conexión.');
+      this.btn = false;
+    }
   });
-  setTimeout(()=>{
-
-  con.unsubscribe();
-  
-  },3000)
-
-
-  
-
 }
 
 

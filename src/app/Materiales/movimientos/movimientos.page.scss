@@ -51,3 +51,59 @@
     color: #ffff;
     border: 2px solid #888589
 }
+
+.modern-card {
+  border-radius: 1rem;
+  background: linear-gradient(135deg, #4a90e2, #007aff);
+  color: white;
+  cursor: pointer;
+  transition: transform 0.2s ease, box-shadow 0.3s ease;
+}
+
+.modern-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
+}
+
+.refer-asignada {
+  background: linear-gradient(135deg, #1e1e1e, #3a3a3a) !important;
+}
+
+.refer-libre {
+  background: linear-gradient(135deg, #28a745, #218838) !important;
+}
+
+.badge-dispo {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  font-size: 0.75rem;
+  padding: 6px 10px;
+  border-radius: 20px;
+  color: #fff;
+  font-weight: bold;
+}
+.alert-tag {
+  background-color: #e9f5ff;
+  border: 1px solid #cce5ff;
+}
+
+.alert-action {
+  transition: background-color 0.3s ease, transform 0.2s ease;
+}
+
+.alert-action:hover {
+  background-color: #0066cc;
+  transform: translateY(-2px);
+}
+.dispo-card {
+  border-radius: 1rem;
+  transition: all 0.3s ease;
+  background: linear-gradient(135deg, #f8f9fa, #ffffff);
+}
+
+.dispo-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 10px 20px rgba(0, 123, 255, 0.1);
+  cursor: pointer;
+}
