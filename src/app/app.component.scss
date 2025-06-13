@@ -167,3 +167,29 @@ ion-badge {
   --padding-start: 20px;
 }
 
+.usuario {
+  font-size: 1rem;
+  background: linear-gradient(45deg, #0d6efd, #0dcaf0);
+  color: #fff;
+  border-radius: 25px;
+}
+
+.menu-item {
+  border-radius: 10px;
+  transition: background-color 0.2s ease;
+}
+
+.menu-item:hover {
+  background-color: #f0f0f0;
+}
+
+ion-badge {
+  cursor: pointer;
+  font-size: 1.2rem;
+  padding: 0.4rem;
+}
+
+.active {
+  font-weight: bold;
+  background-color: #e3f2fd !important;
+}

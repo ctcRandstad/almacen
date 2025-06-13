@@ -128,8 +128,9 @@ export class DevNormalPage implements OnInit {
 
       const suscribir = this._ped.devolverPalet(pedidoTemp.value)
       .subscribe(resp=>{
+     console.log(resp);
      
-        if (resp == 'success') {
+        if (resp.status == 'success') {
           this.categoriaP = false;
           // frame.show();
            this.exito = true;

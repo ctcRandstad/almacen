@@ -13,76 +13,116 @@
 
 <ion-content class="ion-padding">
 
+  <section class="top animated fadeIn" *ngIf="!exito">
+    <div class="container">
 
-    <section class="top animated fadeIn" *ngIf="!exito">
-        <div class="row">
-            <div class="col-md-3">
-                <button type="button" class="btn primary1" (click)="volver()">
-                    <ion-icon name="search"></ion-icon>  Volver a buscar
-               </button>
-            </div>
-            <div class="col-md-3">
-                <div class="input-group topS">
-                    <div class="input-group-prepend">
-                        <span class="input-group-text bg-primary text-white" id="basic-addon1"> <ion-icon name="search"></ion-icon> </span>
-                    </div>
-                    <input [disabled]="toggle" (keyup.enter)="dataToggle2(ins)" #ins type="number" name="instruccion" [(ngModel)]="instruccion" autocomplete="off" class="form-control form-control-sm" placeholder="Elija una Instrucción" aria-label="Username" aria-describedby="basic-addon1"
-                        autocomplete="off">
-                </div>
-            </div>
-            <br>
-            <div class="alert alert-danger col-md-12" *ngIf="nada">
-                <strong>ERROR!</strong> La instrucción que quiere devolver está <strong> ACTIVA , NO SOLICITADA O NO SE LE HA ASIGNADO SOBRANTE.</strong> <br>
-                <button class="btn btn-outline-primary" [routerLink]="['/instruccion']" routerLinkActive="router-link-active"> Consultar Intrucción</button>
-            </div>
-
-            <div *ngIf="tabla1" class="d-flex justify-content-center top12">
-                <ion-spinner name="crescent"></ion-spinner>
-
-            </div>
-
-
-            <div class="col-md-8 alert alert-secondary top" *ngIf="tabla && !nada">
-                Categoría : {{ tipo }} {{ ancho }} x {{ largo }} <span class="tex-center"> Cantidad retirada: {{ salida}}</span>
-            </div>
+      <div class="row g-3 align-items-center mb-4">
+        <div class="col-md-3">
+          <button type="button" class="btn btn-outline-primary w-100" (click)="volver()">
+            <ion-icon name="search"></ion-icon> Volver a buscar
+          </button>
         </div>
 
+        <div class="col-md-6">
+          <div class="input-group">
+            <span class="input-group-text bg-primary text-white">
+              <ion-icon name="search"></ion-icon>
+            </span>
+            <input
+              type="number"
+              class="form-control"
+              [disabled]="toggle"
+              (keyup.enter)="dataToggle2(ins)"
+              #ins
+              name="instruccion"
+              [(ngModel)]="instruccion"
+              placeholder="Elija una Instrucción"
+              autocomplete="off"
+            />
+          </div>
+        </div>
+      </div>
 
-        <form class="row top" #devInstr="ngForm" (ngSubmit)="addDevolver(devInstr)" *ngIf="tabla && !nada">
-            <div class="col-md-6">
-                <div class="md-form">
-                    <input placeholder="Cantidad (uds)" required autocomplete="off" type="number" id="form1" #cantidadDevuelta (keyup)="comprobar(devInstr)" name="cantidadDevuelta" ngModel class="form-control">
+      <div *ngIf="nada" class="alert alert-danger">
+        <strong>¡ERROR!</strong> La instrucción que quiere devolver está
+        <strong>ACTIVA, NO SOLICITADA O NO SE LE HA ASIGNADO SOBRANTE.</strong>
+        <div class="mt-2">
+          <a class="btn btn-outline-primary" [routerLink]="['/instruccion']">Consultar Instrucción</a>
+        </div>
+      </div>
 
-                </div>
-            </div>
-            <input type="hidden" name="idPalet" [(ngModel)]="idPalet" class="form-control">
-            <input type="hidden" name="instruccion" [(ngModel)]="instruccion" class="form-control">
-            <input type="hidden" name="usuario" [(ngModel)]="usuario" class="form-control">
-            <input type="hidden" name="idSalidaPalet" [(ngModel)]="idSalidaPalet" class="form-control">
+      <div *ngIf="tabla1" class="d-flex justify-content-center my-4">
+        <ion-spinner name="crescent"></ion-spinner>
+      </div>
 
-            <div class="col-md-3" *ngIf="!errorCant && err">
-                <ion-button [disabled]="devInstr.invalid" type="submit" color="secondary" class="btn ">
-                    <ion-icon ios="ios-cloud" md="md-cloud"></ion-icon> Aceptar
-                </ion-button>
-            </div>
-            <div class=" col-md-2 top1" *ngIf="!errorCant && !err">
-                <span  class="text-success"> <ion-spinner name="lines-small"></ion-spinner> Espere</span>
-            </div>
-            <div class="col-md-6" *ngIf="errorCant">
-                <div class="alert alert-danger" role="alert">
-                    <strong> Error.</strong> La cantidad que quiere devolver es mayor a la retirada.
-                </div>
-            </div>
+      <div *ngIf="tabla && !nada" class="alert alert-secondary text-uppercase">
+        Categoría: {{ tipo }} {{ ancho }} x {{ largo }} &nbsp;&nbsp;&nbsp;
+        Cantidad retirada: <strong>{{ salida }}</strong>
+      </div>
 
-        </form>
+      <!-- Formulario -->
+      <form *ngIf="tabla && !nada" #devInstr="ngForm" (ngSubmit)="addDevolver(devInstr)" class="row g-4 mt-3">
 
-    </section>
+        <!-- Cantidad -->
+        <div class="col-md-4">
+          <label class="form-label fw-bold">Cantidad (uds)</label>
+          <input
+            type="number"
+            name="cantidadDevuelta"
+            required
+            autocomplete="off"
+            #cantidadDevuelta
+            (keyup)="comprobar(devInstr)"
+            ngModel
+            class="form-control form-control-lg"
+            placeholder="Ingrese la cantidad a devolver"
+          />
+        </div>
 
-        
-<ion-refresher  slot="fixed" (ionRefresh)="doRefresh($event)">
-    <ion-refresher-content pullingIcon="chevron-down-circle-outline"
-    pullingText="Pull to refresh"
-    refreshingSpinner="circles"
-    refreshingText="Refrescando la página..."></ion-refresher-content>
+        <!-- Hidden Inputs -->
+        <input type="hidden" name="idPalet" [(ngModel)]="idPalet" />
+        <input type="hidden" name="instruccion" [(ngModel)]="instruccion" />
+        <input type="hidden" name="usuario" [(ngModel)]="usuario" />
+        <input type="hidden" name="idSalidaPalet" [(ngModel)]="idSalidaPalet" />
+
+        <!-- Botón o Spinner -->
+    <div class="col-md-4 d-flex align-items-end">
+  <ng-container *ngIf="!errorCant">
+    <!-- Botón solo si no se está procesando -->
+    <button
+      *ngIf="!procesando"
+      type="submit"
+      [disabled]="devInstr.invalid"
+      class="btn btn-outline-success btn-lg w-100"
+    >
+      <i class="fas fa-check-circle me-2"></i> Aceptar
+    </button>
+
+    <!-- Spinner si se está procesando -->
+    <div *ngIf="procesando" class="text-success d-flex align-items-center">
+      <div class="spinner-border spinner-border-sm me-2" role="status"></div> Espere...
+    </div>
+  </ng-container>
+</div>
+
+
+        <!-- Error -->
+        <div class="col-12" *ngIf="errorCant">
+          <div class="alert alert-danger text-center fw-bold">
+            <strong>¡ERROR!</strong> La cantidad que quiere devolver es mayor a la retirada.
+          </div>
+        </div>
+      </form>
+    </div>
+  </section>
+
+  <ion-refresher slot="fixed" (ionRefresh)="doRefresh($event)">
+    <ion-refresher-content
+      pullingIcon="chevron-down-circle-outline"
+      pullingText="Pull to refresh"
+      refreshingSpinner="circles"
+      refreshingText="Refrescando la página..."
+    ></ion-refresher-content>
   </ion-refresher>
+
 </ion-content>

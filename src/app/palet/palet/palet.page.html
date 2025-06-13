@@ -11,43 +11,49 @@
 </ion-header>
 
 <ion-content class="ion-padding top">
-    <ion-grid>
-        <ion-row>
-            <ion-col size="3" size-lg routerLink="../tabs/tab1">
-                <ion-card class="alert alert-success">
-                    <ion-card-header>
-                        <h1 class="text-center text-uppercase "> entrada</h1>
-                    </ion-card-header>
-                    <ion-card-content class="h3 text-center">
-                        Esta opción es para la descarga de camiones y visualizar pedidos. <br>
-                    </ion-card-content>
-                </ion-card>
+  <section class="container py-5 mt-3 animate__animated animate__fadeIn">
+  <div class="row g-4 justify-content-center">
 
-            </ion-col>
-            <ion-col size="3" size-lg routerLink="/salida/normal/">
-                <ion-card class="alert alert-secondary">
-                    <ion-card-header>
-                        <h1 class="text-center text-uppercase "> movimientos</h1>
-                    </ion-card-header>
-                    <ion-card-content class="h3 text-center">
-                        Esta opción es para dar entrada y salida a/de fábrica.
-                    </ion-card-content>
-                </ion-card>
-            </ion-col>
+    <!-- Entrada -->
+    <div class="col-md-4">
+      <div class="card shadow-lg border-0 bg-success text-white h-100 cursor-pointer" routerLink="../tabs/tab1">
+        <div class="card-body text-center">
+          <div class="mb-3">
+            <i class="fas fa-truck-loading fa-2x"></i>
+          </div>
+          <h4 class="card-title text-uppercase fw-bold">Entrada</h4>
+          <p class="card-text">Esta opción es para la descarga de camiones y visualizar pedidos.</p>
+        </div>
+      </div>
+    </div>
 
-            <ion-col size="3" size-lg routerLink="/instruccion">
-                <ion-card class="alert alert-danger">
-                    <ion-card-header>
-                        <h1 class="text-center text-uppercase "> Instrucción</h1>
-                    </ion-card-header>
-                    <ion-card-content class="h3 text-center">
-                        En esta opción podrá consultar el estado de las instrucciones.
-                    </ion-card-content>
-                </ion-card>
+    <!-- Movimientos -->
+    <div class="col-md-4">
+      <div class="card shadow-lg border-0 bg-secondary text-white h-100 cursor-pointer" routerLink="/salida/normal/">
+        <div class="card-body text-center">
+          <div class="mb-3">
+            <i class="fas fa-exchange-alt fa-2x"></i>
+          </div>
+          <h4 class="card-title text-uppercase fw-bold">Movimientos</h4>
+          <p class="card-text">Esta opción es para dar entrada y salida a/de fábrica.</p>
+        </div>
+      </div>
+    </div>
 
-            </ion-col>
+    <!-- Instrucción -->
+    <div class="col-md-4">
+      <div class="card shadow-lg border-0 bg-danger text-white h-100 cursor-pointer" routerLink="/instruccion">
+        <div class="card-body text-center">
+          <div class="mb-3">
+            <i class="fas fa-clipboard-check fa-2x"></i>
+          </div>
+          <h4 class="card-title text-uppercase fw-bold">Instrucción</h4>
+          <p class="card-text">En esta opción podrá consultar el estado de las instrucciones.</p>
+        </div>
+      </div>
+    </div>
 
-        </ion-row>
-    </ion-grid>
+  </div>
+</section>
 
 </ion-content>

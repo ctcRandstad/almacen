@@ -127,38 +127,48 @@ export class DevolverPage implements OnInit {
  
    err:boolean=true;
    pedido = new Pedido;
-   addDevolver(devInstr:any){
-     
-     this.pedido =devInstr.value
-     this.err=false;
-    let con= this._ped.devolverPaletInstruccion(devInstr.value)
-     .subscribe(resp=>{
-      this.alerta.cargando('Compobrando los datos.');
-     
-    if (resp == 'success') {
-      this.exito=true;
+procesando = false;
+
+addDevolver(devInstr: any) {
+  if (this.procesando) return; // Evita ejecución múltiple
+
+  this.procesando = true;
+  this.err = false;
+  this.pedido = devInstr.value;
+  console.log('Pedido a devolver:', this.pedido);
+  
+
+  const con = this._ped.devolverPaletInstruccion(this.pedido).subscribe(resp => {
+    this.alerta.cargando('Comprobando los datos.');
+    console.log('Respuesta del servidor:', resp);
+    
+
+    if (resp.status === 'success') {
+      this.exito = true;
       this.alerta.presentLoadimensajeng('Enhorabuena, la devolución de la instrucción fue satisfactoria');
-      setTimeout(()=>{
-       this.exito = false;
-       this.toggle=false;
-       this.instruccion=null;
-      
-       location.reload();
-     },3000)
-    }else{
-      alert('Errro, inténtelo mas tarde.');
-      location.reload();
 
+      setTimeout(() => {
+        this.exito = false;
+        this.toggle = false;
+        this.instruccion = null;
+        location.reload();
+      }, 3000);
+
+    } else {
+      alert('Error, inténtelo más tarde.');
+      this.procesando = false;
+      // location.reload();
     }
-  })
-  setTimeout(()=>{
-    con.unsubscribe();
-      this.alerta.presentToast('El servidor no responde.');
-      // this.err=true;
-  },6100)
-     
-   }
+  });
 
+  setTimeout(() => {
+    con.unsubscribe();
+    if (this.procesando) {
+      this.alerta.presentToast('El servidor no responde.');
+      this.procesando = false;
+    }
+  }, 6100);
+}
    
   doRefresh(event:any) {
     setTimeout(() => {

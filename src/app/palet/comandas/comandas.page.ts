@@ -231,37 +231,38 @@ desestimar1(){
   })
 }
 
-aceptar(){
-  // console.log(this.idComanda);
+aceptar() {
+  if (this.boton) return; // Previene múltiples clics
 
   this.boton = true;
-  const suscribir = this._sobpeti.desestimar(this.idComanda)
-  .subscribe(res=>{
 
-    if (res == 'desestimado') {
-      const suscribir1 =   this._sobpeti.salidaPalet(this.cantidad ,this.idPalet,this.idUbicacion ,this.usuarioS)
-      .subscribe(res=>{
-        if (res == 'success') {
-          // this.desestimar();
-          SplashScreen.show();
-          location.reload();
-        } else {
-          alert('no se ha podido quitar los palet.intentelo mas tarde..');
-        }
-      })
-      setTimeout(() => { 
-        suscribir1.unsubscribe(); 
-       SplashScreen.show();
+  const suscribir = this._sobpeti.desestimar(this.idComanda).subscribe(res => {
+    if (res === 'desestimado') {
+      const suscribir1 = this._sobpeti.salidaPalet(this.cantidad, this.idPalet, this.idUbicacion, this.usuarioS)
+        .subscribe(res => {
+          if (res === 'success') {
+            SplashScreen.show();
+            location.reload();
+          } else {
+            alert('No se ha podido quitar los palets. Inténtelo más tarde.');
+            this.boton = false; // Reactiva si hay error
+          }
+        });
+
+      setTimeout(() => {
+        suscribir1.unsubscribe();
+        SplashScreen.show();
       }, 6000);
-    }else{
-      alert('La comanda ya fue retirada..');
+    } else {
+      alert('La comanda ya fue retirada.');
       SplashScreen.show();
-        location.reload();
+      location.reload();
     }
-  })
-  setTimeout(() => { 
-         suscribir.unsubscribe();
-         location.reload();
+  });
+
+  setTimeout(() => {
+    suscribir.unsubscribe();
+    this.boton = false; // Reactiva si no hubo reload
   }, 6000);
 }
 

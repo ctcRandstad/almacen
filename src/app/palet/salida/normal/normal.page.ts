@@ -232,38 +232,40 @@ pilas:boolean=false;
   pedido:any = new Pedido
   exito:boolean = false;
   boton:boolean = false;
-  addPedidosTemp(pedidoTemp:NgForm){
-    this.boton = true;
-    this.pedido = pedidoTemp.value;
-   
-  const suscribir =  this._ped.salidaPalet(this.pedido)
-    .subscribe(data=>{
+addPedidosTemp(pedidoTemp: NgForm) {
+  if (this.boton) return; // Protección doble clic
+
+  this.boton = true;
+  this.pedido = pedidoTemp.value;
+
+  this._ped.salidaPalet(this.pedido).subscribe({
+    next: (data) => {
       console.log(data);
-      
-     if (data == 'success') {
-       const ms = 'Guardando cambios..';
-       this.alerta.presentLoadimensajeng(ms);
-       this.exito = true;
-       this.palet=false;
-       this.palet1=false;
-       this.si = false;
-       this.categoriaP=false;
-       SplashScreen.show();
-       setTimeout(()=>{
-         location.reload();
-       },2000);
-      // this.ionViewWillEnter();
-     }else{
-       this.alerta.presentToast('Error, inténtelo más tarde')
-     }
-    })
-   
-    setTimeout(() => { 
-      suscribir.unsubscribe();
+      if (data === 'success') {
+        const ms = 'Guardando cambios...';
+        this.alerta.presentLoadimensajeng(ms);
+        this.exito = true;
+        this.palet = false;
+        this.palet1 = false;
+        this.si = false;
+        this.categoriaP = false;
+        SplashScreen.show();
+        setTimeout(() => {
+          location.reload();
+        }, 2000);
+      } else {
+        this.alerta.presentToast('Error, inténtelo más tarde');
+        this.boton = false;
+      }
+    },
+    error: (err) => {
+      console.error(err);
+      this.alerta.presentToast('Error de conexión');
       this.boton = false;
-     }, 2000);
-    
-  }
+    }
+  });
+}
+
 
   
   dataN:any;

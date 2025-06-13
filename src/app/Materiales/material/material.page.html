@@ -15,55 +15,55 @@
 <!-- carretillero -->
 <!-- carretillero -->
 
-<ion-content class="ion-padding">
-    <ion-grid>
-        <ion-row>
-            <ion-col size="2" size-lg [routerLink]="[ '/entrada', idMaterial ]">
-                <ion-card class="alert alert-success">
-                    <ion-card-header>
-                        <h1 class="text-center text-uppercase "> entrada</h1>
-                    </ion-card-header>
-                    <ion-card-content class="h3 text-center">
-                        Esta opción es para la confirmación del albarán.
-                    </ion-card-content>
-                </ion-card>
+<ion-content class="ion-padding bg-light">
+  <ion-grid class="pt-4">
+  <ion-row class="gy-4 justify-content-center">
 
-            </ion-col>
-            <ion-col size="2" size-lg [routerLink]="[ '/ubicarM', idMaterial ]">
-                <ion-card class="alert alert-warning">
-                    <ion-card-header>
-                        <h1 class="text-center text-uppercase "> ubicar</h1>
-                    </ion-card-header>
-                    <ion-card-content class="h3 text-center">
-                        En esta opción podrá ubicar los bultos en las ubicaciones.
-                    </ion-card-content>
-                </ion-card>
+    <!-- Entrada -->
+    <ion-col size="12" size-md="5" size-lg="3" [routerLink]="[ '/entrada', idMaterial ]">
+      <div class="card custom-card border-start border-1 bg-success h-100 hover-card">
+        <div class="card-body text-center">
+          <i class="fas fa-truck-loading fa-2x text-success mb-2"></i>
+          <h5 class="card-title text-white text-uppercase fw-bold">Entrada</h5>
+          <p class="card-text text-white small">Confirmación del albarán.</p>
+        </div>
+      </div>
+    </ion-col>
 
-            </ion-col>
-            <ion-col size="2" size-lg [routerLink]="[ '/movimientosM', idMaterial ]">
+    <!-- Ubicar -->
+    <ion-col size="12" size-md="5" size-lg="3" [routerLink]="[ '/ubicarM', idMaterial ]">
+      <div class="card custom-card border-start border-1 bg-warning h-100 hover-card">
+        <div class="card-body text-center">
+          <i class="fas fa-map-marked-alt fa-2x text-warning mb-2"></i>
+          <h5 class="card-title text-white text-uppercase fw-bold">Ubicar</h5>
+          <p class="card-text text-white small">Ubique los bultos en las ubicaciones.</p>
+        </div>
+      </div>
+    </ion-col>
 
-                <ion-card class="alert alert-dark">
-                    <ion-card-header>
-                        <h1 class="text-center text-uppercase "> movimientos</h1>
-                    </ion-card-header>
-                    <ion-card-content class="h3 text-center">
-                        Esta opción es para mover material entre ubicaciones.
-                    </ion-card-content>
-                </ion-card>
-            </ion-col>
-            <ion-col size="2" size-lg [routerLink]="[ '/stockM', idMaterial ]">
+    <!-- Movimientos -->
+    <ion-col size="12" size-md="5" size-lg="3" [routerLink]="[ '/movimientosM', idMaterial ]">
+      <div class="card custom-card border-start border-1 bg-dark h-100 hover-card">
+        <div class="card-body text-center">
+          <i class="fas fa-exchange-alt fa-2x text-dark mb-2"></i>
+          <h5 class="card-title text-white text-uppercase fw-bold">Movimientos</h5>
+          <p class="card-text text-white small">Mover material entre ubicaciones.</p>
+        </div>
+      </div>
+    </ion-col>
 
-                <ion-card class="alert alert-danger">
-                    <ion-card-header>
-                        <h1 class="text-center text-uppercase "> stock</h1>
-                    </ion-card-header>
-                    <ion-card-content class="h3 text-center">
-                        Esta opción es para ver el stock de materiales en ubicaciones.
-                    </ion-card-content>
-                </ion-card>
-            </ion-col>
-        </ion-row>
+    <!-- Stock -->
+    <ion-col size="12" size-md="5" size-lg="3" [routerLink]="[ '/stockM', idMaterial ]">
+      <div class="card custom-card border-start border-1 bg-danger h-100 hover-card">
+        <div class="card-body text-center">
+          <i class="fas fa-boxes fa-2x text-danger mb-2"></i>
+          <h5 class="card-title text-white text-uppercase fw-bold">Stock</h5>
+          <p class="card-text text-white small">Ver stock de materiales en ubicaciones.</p>
+        </div>
+      </div>
+    </ion-col>
 
-    </ion-grid>
+  </ion-row>
+</ion-grid>
 
 </ion-content>
