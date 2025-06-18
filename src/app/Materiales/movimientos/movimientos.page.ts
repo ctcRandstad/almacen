@@ -229,7 +229,14 @@ pa:any;
 datos:any=[];
 todoOk!:boolean;
 scanP(idPalet:any){
-  if (idPalet == this.idPalet) {
+
+   const cleanId = String(idPalet).trim();
+  const expectedId = String(this.idPalet).trim();
+
+  console.log(`Escaneado: [${cleanId}]`);
+  console.log(`Esperado: [${expectedId}]`);
+  
+  if (cleanId === expectedId) {
     setTimeout(() => {
       // this.keyboard.hide();
       Keyboard.hide();

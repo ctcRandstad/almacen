@@ -196,6 +196,8 @@ async validadL(
             .validarEntrada(idDetalle, cantidad, cantidadM, codigoSap, idPedido, palet, this.idMaterial, idProveedor, stockF)
             .subscribe({
               next: (res: any) => {
+                console.log(res);
+                
                 this.btnTabs = false;
 
                 if (res.status === 'success') {
